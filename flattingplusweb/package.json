@@ -2,12 +2,10 @@
   "name": "flattingplusweb",
   "version": "1.0.0",
   "description": "web app to support database queries for the android app",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "scripts": {
-    "start": "node server.js"
   },
   "repository": {
     "type": "git",
