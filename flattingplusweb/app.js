@@ -33,7 +33,7 @@ pg.connect(connectionString, function (err, client, done) {
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
-app.use("/", express.static(__dirname + '/public'));//serve up the website
+// app.use("/", express.static(__dirname + '/public'));//serve up the website
 
 // app.set('view engine', 'jade');
 
