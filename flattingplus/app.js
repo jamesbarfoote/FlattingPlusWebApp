@@ -93,6 +93,33 @@ app.put('/add/user', function (req, res) {
         res.status(500).send('Error, fail to add to user name:' + name + ' email: ' + email);
     });
 
+    //get user
+    app.put('/get/user', function (req, res) {
+        var userEmail = req.body.email;
+        var userPass = req.body.pass;
+        //console.log(userEmail);
+        var q = "SELECT * FROM users WHERE email=$1";
+        var query = client.query(q, [userEmail]);
+
+        var results = [];
+
+        //error handler for /get_users
+        query.on('error', function () {
+            res.status(500).send('Error, fail to get users: ' + userEmail);
+        });
+
+        //stream results back one row at a time
+        query.on('row', function (row) {
+            console.log('Pass = ' + row.pass + ' email: ' + row.email);
+            results.push(row);
+        });
+
+        //After all data is returned, close connection and return results
+        query.on('end', function () {
+            res.json(results);
+            console.log("result: " + results);
+        });
+    });
 
 
 
