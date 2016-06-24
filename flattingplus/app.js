@@ -45,103 +45,103 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 
-app.get('/get_users', function (req, res) {
-    var userName = req.body.name;
+// app.get('/get_users', function (req, res) {
+//     var userName = req.body.name;
 
-    var query = client.query("select * from users");
-    var results = [];
+//     var query = client.query("select * from users");
+//     var results = [];
 
-    //error handler for /get_users
-    query.on('error', function () {
-        res.status(500).send('Error, fail to get users: ' + userName);
-    });
+//     //error handler for /get_users
+//     query.on('error', function () {
+//         res.status(500).send('Error, fail to get users: ' + userName);
+//     });
 
-    //stream results back one row at a time
-    query.on('row', function (row) {
-        results.push(row);
-    });
+//     //stream results back one row at a time
+//     query.on('row', function (row) {
+//         results.push(row);
+//     });
 
-    //After all data is returned, close connection and return results
-    query.on('end', function () {
-        //setting the cache to public so only reflash at a specific time (100 second)
-        res.setHeader('Cache-Control', 'public, max-age=100');
-        res.json(results);
-        console.log("result: " + results);
-    });
-});
+//     //After all data is returned, close connection and return results
+//     query.on('end', function () {
+//         //setting the cache to public so only reflash at a specific time (100 second)
+//         res.setHeader('Cache-Control', 'public, max-age=100');
+//         res.json(results);
+//         console.log("result: " + results);
+//     });
+// });
 
-app.put('/add/user', function (req, res) {
-    var name = req.body.name;
-    var email = req.body.email;
-    var flatGroup = req.body.group;
-    var pic = req.body.pic;
+// app.put('/add/user', function (req, res) {
+//     var name = req.body.name;
+//     var email = req.body.email;
+//     var flatGroup = req.body.group;
+//     var pic = req.body.pic;
 
-    var q = "insert into users (name,email,group,pic) "
-        + "values ($1,$2,$3,$4) RETURNING name,email,group, pic";
-    var query = client.query(q, [name, email, flatGroup, pic]);
-    var results = [];
+//     var q = "insert into users (name,email,group,pic) "
+//         + "values ($1,$2,$3,$4) RETURNING name,email,group, pic";
+//     var query = client.query(q, [name, email, flatGroup, pic]);
+//     var results = [];
 
-    //error handler for /add_purchases
-    query.on('error', function () {
-        res.status(500).send('Error, fail to add to user name:' + name + ' email: ' + email);
-    });
-});
+//     //error handler for /add_purchases
+//     query.on('error', function () {
+//         res.status(500).send('Error, fail to add to user name:' + name + ' email: ' + email);
+//     });
+// });
 
-    //get user
-app.get('/get/user', function (req, res) {
-        var userEmail = req.body.email;
-        var userPass = req.body.pass;
-        //console.log(userEmail);
-        var q = "SELECT * FROM users WHERE email=$1";
-        var query = client.query(q, [userEmail]);
+//     //get user
+// app.get('/get/user', function (req, res) {
+//         var userEmail = req.body.email;
+//         var userPass = req.body.pass;
+//         //console.log(userEmail);
+//         var q = "SELECT * FROM users WHERE email=$1";
+//         var query = client.query(q, [userEmail]);
 
-        var results = [];
+//         var results = [];
 
-        //error handler for /get_users
-        query.on('error', function () {
-            res.status(500).send('Error, fail to get users: ' + userEmail);
-        });
+//         //error handler for /get_users
+//         query.on('error', function () {
+//             res.status(500).send('Error, fail to get users: ' + userEmail);
+//         });
 
-        //stream results back one row at a time
-        query.on('row', function (row) {
-            console.log('Pass = ' + row.pass + ' email: ' + row.email);
-            results.push(row);
-        });
+//         //stream results back one row at a time
+//         query.on('row', function (row) {
+//             console.log('Pass = ' + row.pass + ' email: ' + row.email);
+//             results.push(row);
+//         });
 
-        //After all data is returned, close connection and return results
-        query.on('end', function () {
-            res.json(results);
-            console.log("result: " + results);
-        });
-});
+//         //After all data is returned, close connection and return results
+//         query.on('end', function () {
+//             res.json(results);
+//             console.log("result: " + results);
+//         });
+// });
 
-//update user
-app.post('/update/user', function (req, res) {
-    var userName = req.body.name;
-    var userEmail = req.body.email;
-    var userGroup = req.body.group;
-    var userPic = req.body.pic;
+// //update user
+// app.post('/update/user', function (req, res) {
+//     var userName = req.body.name;
+//     var userEmail = req.body.email;
+//     var userGroup = req.body.group;
+//     var userPic = req.body.pic;
 
-    var q = "update user set name = $1, flatgroup = $2, pic = $3 where email = $4";
-    var query = client.query(q, [userName, userGroup, userPic, userEmail]);
-    var results = [];
+//     var q = "update user set name = $1, flatgroup = $2, pic = $3 where email = $4";
+//     var query = client.query(q, [userName, userGroup, userPic, userEmail]);
+//     var results = [];
 
-    //error handler for /update_cart
-    query.on('error', function () {
-        res.status(500).send('Error, fail to update user:' + name + ' email: ' + email);
-    });
+//     //error handler for /update_cart
+//     query.on('error', function () {
+//         res.status(500).send('Error, fail to update user:' + name + ' email: ' + email);
+//     });
 
-    //stream results back one row at a time
-    query.on('row', function (row) {
-        results.push(row);
-    });
+//     //stream results back one row at a time
+//     query.on('row', function (row) {
+//         results.push(row);
+//     });
 
-    //after all the data is returned close connection and return result
-    query.on('end', function () {
-        res.json(results);
-        console.log("result: " + results);
-    });
-});
+//     //after all the data is returned close connection and return result
+//     query.on('end', function () {
+//         res.json(results);
+//         console.log("result: " + results);
+//     });
+// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
