@@ -115,6 +115,34 @@ app.get('/get/user', function (req, res) {
         });
 });
 
+//update user
+app.post('/update/user', function (req, res) {
+    var userName = req.body.name;
+    var userEmail = req.body.email;
+    var userGroup = req.body.group;
+    var userPic = req.body.pic;
+
+    var q = "update user set name = $1, flatgroup = $2, pic = $3 where email = $4";
+    var query = client.query(q, [userName, userGroup, userPic, userEmail]);
+    var results = [];
+
+    //error handler for /update_cart
+    query.on('error', function () {
+        res.status(500).send('Error, fail to update user:' + name + ' email: ' + email);
+    });
+
+    //stream results back one row at a time
+    query.on('row', function (row) {
+        results.push(row);
+    });
+
+    //after all the data is returned close connection and return result
+    query.on('end', function () {
+        res.json(results);
+        console.log("result: " + results);
+    });
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
