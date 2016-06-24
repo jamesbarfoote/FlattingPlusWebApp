@@ -1,16 +1,19 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
+// var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+// var routes = require('./routes/index');
+// var users = require('./routes/users');
 
 var app = express();
 
 var port = process.env.PORT || 8080;
+
+app.use("/", express.static(__dirname + '/public'));//serve up the website
+
 var pg = require('pg').native;
 var connectionString = "postgres://gmjjkzeggzlbbf:t4oWQipbrMXWYFm0LBu529x1KE@ec2-54-235-104-63.compute-1.amazonaws.com:5432/d9r6u6eji1fjat";
 var client = new pg.Client(connectionString);
@@ -33,12 +36,12 @@ pg.connect(connectionString, function (err, client, done) {
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
-app.use("/", express.static(__dirname + '/public'));//serve up the website
+// app.use("/", express.static(__dirname + '/public'));//serve up the website
 
 // app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+/app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
