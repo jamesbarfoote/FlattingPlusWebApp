@@ -9,6 +9,26 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+var port = process.env.PORT || 8080;
+var pg = require('pg').native;
+var connectionString = "postgres://gmjjkzeggzlbbf:t4oWQipbrMXWYFm0LBu529x1KE@ec2-54-235-104-63.compute-1.amazonaws.com:5432/d9r6u6eji1fjat";
+var client = new pg.Client(connectionString);
+client.connect();
+
+pg.connect(connectionString, function (err, client, done) {
+    if (err) {
+        console.error('Could not connect to the database');
+        console.error(err);
+        return;
+    }
+    console.log('Connected to database');
+    // client.query("SELECT * FROM users;", function (error, result) {
+    //     done();
+    //     if (error) {
+    //     }
+    //     //console.log(result);
+    // });
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -57,4 +77,29 @@ app.use(function(err, req, res, next) {
 });
 
 
+app.put('/add/user', function (req, res) {
+    var name = req.body.name;
+    var email = req.body.email;
+    var flatGroup = req.body.group;
+    var pic = req.body.pic;
+
+    var q = "insert into users (name,email,group,pic) "
+        + "values ($1,$2,$3,$4) RETURNING name,email,group, pic";
+    var query = client.query(q, [name, email, flatGroup, pic]);
+    var results = [];
+
+    //error handler for /add_purchases
+    query.on('error', function () {
+        res.status(500).send('Error, fail to add to user name:' + name + ' email: ' + email);
+    });
+
+
+
+
+
+
 module.exports = app;
+
+app.listen(port, function () {
+    console.log("Flatting Plus app listening on port: " + port + "!");
+});
