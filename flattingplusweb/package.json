@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "web app to support database queries for the android app",
   "engines": {
-    "npm": "3.7.3"
+    "npm": "3.7.3",
+    "node": "5.8.0"
   },
   "main": "server.js",
   "scripts": {
