@@ -1,5 +1,0 @@
-create table users (id serial primary key, email varchar, name varchar, pic varchar, flatgroup varchar);
-
-create table flatgroup (id serial primary key, groupname varchar, password varchar, notes varchar, shoppinglist varchar, calendar varchar, money varchar);
-
-create table notes (id serial primary key, userID int, title varchar, content varchar, flatgroup varchar);
