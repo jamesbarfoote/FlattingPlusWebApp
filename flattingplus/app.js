@@ -92,6 +92,7 @@ app.put('/add/user', function (req, res) {
     query.on('error', function () {
         res.status(500).send('Error, fail to add to user name:' + name + ' email: ' + email);
     });
+});
 
     //get user
     app.put('/get/user', function (req, res) {
