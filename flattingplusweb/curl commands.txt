@@ -1,0 +1,1 @@
+curl -i -X PUT -H "Content-Type:application/json" https://flattingplus.herokuapp.com/add/user -d '{"name":"jim","email":"test@test.com", "group":"s", "pic":""}'

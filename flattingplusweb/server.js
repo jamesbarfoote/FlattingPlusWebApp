@@ -124,6 +124,31 @@ app.post('/update/user', function (req, res) {
     });
 });
 
+app.get('/get/users', function (req, res) {
+    var userName = req.body.name;
+
+    var query = client.query("select * from users");
+    var results = [];
+
+    //error handler for /get_users
+    query.on('error', function () {
+        res.status(500).send('Error, fail to get users: ' + userName);
+    });
+
+    //stream results back one row at a time
+    query.on('row', function (row) {
+        results.push(row);
+    });
+
+    //After all data is returned, close connection and return results
+    query.on('end', function () {
+        //setting the cache to public so only reflash at a specific time (100 second)
+        res.setHeader('Cache-Control', 'public, max-age=100');
+        res.json(results);
+        console.log("result: " + results);
+    });
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
