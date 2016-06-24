@@ -1,0 +1,26 @@
+{
+  "name": "flattingplusweb",
+  "version": "1.0.0",
+  "description": "web app to support database queries for the android app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jimmy2174/FlattingPlusWebApp.git"
+  },
+  "author": "James Barfoote",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jimmy2174/FlattingPlusWebApp/issues"
+  },
+  "homepage": "https://github.com/jimmy2174/FlattingPlusWebApp#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "morgan": "^1.7.0",
+    "pg": "^6.0.1",
+    "serve-favicon": "^2.3.0"
+  }
+}
