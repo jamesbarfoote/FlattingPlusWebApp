@@ -69,7 +69,7 @@ app.put('/add/user', function (req, res) {
 });
 
 //get user
-app.put('/get/user', function (req, res) {
+app.get('/get/user', function (req, res) {
     var userEmail = req.body.email;
     var userPass = req.body.pass;
     console.log("get user, email: " + userEmail);
