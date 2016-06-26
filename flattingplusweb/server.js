@@ -70,7 +70,7 @@ app.put('/add/user', function (req, res) {
 
 //get user
 app.get('/get/user', function (req, res) {
-    var userEmail = req.body.email;
+    var userEmail = req.query.email;
     var userPass = req.body.pass;
     console.log("get user, email: " + userEmail);
     var q = "SELECT * FROM users WHERE email=$1";
