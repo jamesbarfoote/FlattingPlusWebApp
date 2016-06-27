@@ -91,8 +91,8 @@ app.put('/add/user', function (req, res) {
 
     //after all the data is returned close connection and return result
     query.on('end', function () {
-      var ob = JSON.stringify(results);
-        res.json(ob);
+      // var ob = JSON.stringify(results);
+        // res.json();
         console.log("result: " + results);
     });
 });
