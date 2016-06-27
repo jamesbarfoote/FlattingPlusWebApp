@@ -85,7 +85,7 @@ app.get('/get/user', function (req, res) {
 
     //stream results back one row at a time
     query.on('row', function (row) {
-        console.log('Pass = ' + row.pass + ' email: ' + row.email);
+        console.log('Row ' + row);
         results.push(row);
     });
 
