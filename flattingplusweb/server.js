@@ -181,7 +181,7 @@ app.put('/add/group', function (req, res) {
     var pass = req.body.gpass;
     console.log("Group: " + flatGroup + " Pass: " + pass);
 
-    var q = "insert into flatgroup (groupname,password) values ($1, $2)";
+    var q = "insert into flatgroup (groupname,password) values ($1, $2) RETURNING groupname, password, notes, shoppinglist, calendar, money";
     // var q = "insert into flatgroup (groupname,password) "
     //     + "values ($1,$2) RETURNING id, groupname,password, notes, shoppinglist, calendar, money";
     var query = client.query(q, [flatGroup, pass]);
@@ -192,6 +192,31 @@ app.put('/add/group', function (req, res) {
         res.status(500).send('Error, fail to add to user name:' + name + ' email: ' + email);
     });
 });
+
+  // app.put('/add/group', function (req, res) {
+  //     var group = req.body.group;
+  //     var gpass = req.body.gpass;
+  //     console.log("name: " + group + " pass: " + gpass);
+  //     var q = "insert into flatgroup (group,gpass) values ($1,$2) RETURNING group, ";
+  //     var query = client.query(q, [productName, productCost, productDes]);
+  //     var results = [];
+  //
+  //     //error handler for /add_product
+  //     query.on('error', function () {
+  //         res.status(500).send('Error, fail to add group ' + group);
+  //     });
+  //
+  //     //stream results back one row at a time
+  //     query.on('row', function (row) {
+  //         results.push(row);
+  //     });
+  //
+  //     //after all the data is returned close connection and return result
+  //     query.on('end', function () {
+  //         res.json(results);
+  //         console.log("result: " + results);
+  //     });
+  // });
 
 
 
