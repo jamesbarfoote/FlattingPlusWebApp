@@ -51,20 +51,48 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/', routes);
 // app.use('/users', users);
 
-app.put('/add/user', function (req, res) {
-    var name = req.body.name;
-    var email = req.body.email;
-    var flatGroup = req.body.group;
-    var pic = req.body.pic;
+// app.put('/add/user', function (req, res) {
+//     var name = req.body.name;
+//     var email = req.body.email;
+//     var flatGroup = req.body.group;
+//     var pic = req.body.pic;
+//
+//     var q = "insert into users (name,email,group,pic) values ($1,$2,$3,$4) RETURNING name,email,group, pic";
+//     var query = client.query(q, [name, email, flatGroup, pic]);
+//     var results = [];
+//
+//     //error handler for /add_purchases
+//     query.on('error', function () {
+//         res.status(500).send('Error, fail to add to user name:' + name + ' email: ' + email);
+//     });
+// });
 
-    var q = "insert into users (name,email,group,pic) "
-        + "values ($1,$2,$3,$4) RETURNING name,email,group, pic";
-    var query = client.query(q, [name, email, flatGroup, pic]);
+
+app.put('/add/user', function (req, res) {
+  var name = req.body.name;
+  var email = req.body.email;
+  var flatGroup = req.body.group;
+  var pic = req.body.pic;
+
+    console.log("name: " + name + " email: " + email);
+    var q = "insert into users (email,name, pic, flatgroup) values ($1,$2, $3, $4) RETURNING email";
+    var query = client.query(q, [email, name, pic, flatGroup]);
     var results = [];
 
-    //error handler for /add_purchases
+    //error handler for /add_product
     query.on('error', function () {
-        res.status(500).send('Error, fail to add to user name:' + name + ' email: ' + email);
+        res.status(500).send('Error, fail to add group ' + group);
+    });
+
+    //stream results back one row at a time
+    query.on('row', function (row) {
+        results.push(row);
+    });
+
+    //after all the data is returned close connection and return result
+    query.on('end', function () {
+        res.json(results);
+        console.log("result: " + results);
     });
 });
 
@@ -193,30 +221,7 @@ app.put('/add/group', function (req, res) {
     });
 });
 
-  // app.put('/add/group', function (req, res) {
-  //     var group = req.body.group;
-  //     var gpass = req.body.gpass;
-  //     console.log("name: " + group + " pass: " + gpass);
-  //     var q = "insert into flatgroup (group,gpass) values ($1,$2) RETURNING group, ";
-  //     var query = client.query(q, [productName, productCost, productDes]);
-  //     var results = [];
-  //
-  //     //error handler for /add_product
-  //     query.on('error', function () {
-  //         res.status(500).send('Error, fail to add group ' + group);
-  //     });
-  //
-  //     //stream results back one row at a time
-  //     query.on('row', function (row) {
-  //         results.push(row);
-  //     });
-  //
-  //     //after all the data is returned close connection and return result
-  //     query.on('end', function () {
-  //         res.json(results);
-  //         console.log("result: " + results);
-  //     });
-  // });
+
 
 
 
