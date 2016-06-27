@@ -184,7 +184,7 @@ app.put('/add/group', function (req, res) {
     var q = "insert into flatgroup (groupname,password) values ($1, $2)";
     // var q = "insert into flatgroup (groupname,password) "
     //     + "values ($1,$2) RETURNING id, groupname,password, notes, shoppinglist, calendar, money";
-    var query = client.query(q, [flatgroup, pass]);
+    var query = client.query(q, [flatGroup, pass]);
     var results = [];
 
     //error handler for /add group
