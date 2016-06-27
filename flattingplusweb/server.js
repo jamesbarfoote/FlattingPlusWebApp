@@ -132,14 +132,14 @@ app.post('/update/user', function (req, res) {
     var userEmail = req.body.email;
     var userGroup = req.body.group;
     var userPic = req.body.pic;
-
+    console.log(userName + " " + userEmail + " " + userGroup + " " + userPic);
     var q = "update user set name = $1, flatgroup = $2, pic = $3 where email = $4 RETURNING email, name, pic, groupname";
     var query = client.query(q, [userName, userGroup, userPic, userEmail]);
     var results = [];
 
     //error handler for /update_cart
     query.on('error', function () {
-        res.status(500).send('Error, fail to update user:' + name + ' email: ' + email);
+        res.status(500).send('Error, fail to update user:' + userName + ' email: ' + userEmail);
     });
 
     //stream results back one row at a time
