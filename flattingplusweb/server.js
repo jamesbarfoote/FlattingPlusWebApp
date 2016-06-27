@@ -220,6 +220,18 @@ app.put('/add/group', function (req, res) {
     query.on('error', function () {
         res.status(500).send('Error, fail to add to user name:' + name + ' email: ' + email);
     });
+    //stream results back one row at a time
+    query.on('row', function (row) {
+        results.push(row);
+    });
+
+    //After all data is returned, close connection and return results
+    query.on('end', function () {
+      var obj = { groupname: results[0].groupname, password: results[0].password, notes: results[0].notes };
+
+        res.json(obj);
+        console.log("result: " + obj);
+    });
 });
 
 
