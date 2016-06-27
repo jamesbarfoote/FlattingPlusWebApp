@@ -79,7 +79,7 @@ app.put('/add/user', function (req, res) {
     var query = client.query(q, [email, name, pic, flatGroup]);
     var results = [];
 
-    //error handler for /add_product
+    //error handler for /add user
     query.on('error', function () {
         res.status(500).send('Error, fail to add group ' + group);
     });
