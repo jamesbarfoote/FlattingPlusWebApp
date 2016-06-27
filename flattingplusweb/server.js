@@ -75,7 +75,7 @@ app.put('/add/user', function (req, res) {
   var pic = req.body.pic;
 
     console.log("name: " + name + " email: " + email);
-    var q = "insert into users (email,name, pic, flatgroup) values ($1,$2, $3, $4) RETURNING email, name, flatgroup";
+    var q = "insert into users (email,name, pic, flatgroup) values ($1,$2, $3, $4)";
     var query = client.query(q, [email, name, pic, flatGroup]);
     var results = [];
 
@@ -193,7 +193,6 @@ app.get('/get/flatgroup', function (req, res) {
 
     //stream results back one row at a time
     query.on('row', function (row) {
-        console.log('Row ' + row);
         results.push(row);
     });
 
