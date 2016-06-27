@@ -92,8 +92,9 @@ app.put('/add/user', function (req, res) {
     //after all the data is returned close connection and return result
     query.on('end', function () {
       // var ob = JSON.stringify(results);
-        // res.json();
-        console.log("result: " + results);
+      var obj = { email: results[0].email, name: results[0].name, flatgroup: results[0].flatgroup };
+        res.json(obj);
+        console.log("result: " + obj);
     });
 });
 
