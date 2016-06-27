@@ -176,7 +176,20 @@ app.get('/get/flatgroup', function (req, res) {
     });
 });
 
+app.put('/add/group', function (req, res) {
+    var flatGroup = req.body.group;
+    var pass = req.body.gpass;
 
+    var q = "insert into flatgroup (groupname,password) "
+        + "values ($1,$2) RETURNING id, groupname,password, notes, shoppinglist, calendar, money";
+    var query = client.query(q, [group, gpass]);
+    var results = [];
+
+    //error handler for /add_purchases
+    query.on('error', function () {
+        res.status(500).send('Error, fail to add to user name:' + name + ' email: ' + email);
+    });
+});
 
 
 
