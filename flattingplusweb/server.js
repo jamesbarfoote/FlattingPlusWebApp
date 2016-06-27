@@ -75,13 +75,13 @@ app.put('/add/user', function (req, res) {
   var pic = req.body.pic;
 
     console.log("name: " + name + " email: " + email);
-    var q = "insert into users (email,name, pic, flatgroup) values ($1,$2, $3, $4) RETURNING email";
+    var q = "insert into users (email,name, pic, flatgroup) values ($1,$2, $3, $4) RETURNING email, name, flatgroup";
     var query = client.query(q, [email, name, pic, flatGroup]);
     var results = [];
 
     //error handler for /add user
     query.on('error', function () {
-        res.status(500).send('Error, fail to add group ' + group);
+        res.status(500).send('Error, fail to add user ' + name);
     });
 
     //stream results back one row at a time
