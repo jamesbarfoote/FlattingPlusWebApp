@@ -142,12 +142,43 @@ app.get('/get/users', function (req, res) {
 
     //After all data is returned, close connection and return results
     query.on('end', function () {
-        //setting the cache to public so only reflash at a specific time (100 second)
-        res.setHeader('Cache-Control', 'public, max-age=100');
         res.json(results);
         console.log("result: " + results);
     });
 });
+
+
+//get group
+app.get('/get/flatgroup', function (req, res) {
+    var groupName = req.query.gname;
+    var groupPass = req.query.pass;
+    console.log("get group, name: " + groupName + " password: " + groupPass);
+    var q = "SELECT * FROM flatgroup WHERE groupname=$1 and password=$2";
+    var query = client.query(q, [groupName, groupPass]);
+
+    var results = [];
+
+    //error handler for /get_users
+    query.on('error', function () {
+        res.status(500).send('Error, fail to get users: ' + userEmail);
+    });
+
+    //stream results back one row at a time
+    query.on('row', function (row) {
+        console.log('Row ' + row);
+        results.push(row);
+    });
+
+    //After all data is returned, close connection and return results
+    query.on('end', function () {
+        res.json(results);
+        console.log("result: " + results[0]);
+    });
+});
+
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
