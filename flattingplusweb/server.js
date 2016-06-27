@@ -92,7 +92,7 @@ app.get('/get/user', function (req, res) {
     //After all data is returned, close connection and return results
     query.on('end', function () {
         res.json(results);
-        console.log("result: " + results);
+        console.log("result: " + results[0]);
     });
 });
 
