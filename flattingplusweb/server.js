@@ -176,7 +176,7 @@ app.get('/get/flatgroup', function (req, res) {
     });
 });
 
-app.post('/add/group', function (req, res) {
+app.put('/add/group', function (req, res) {
     var flatGroup = req.body.group;
     var pass = req.body.gpass;
     console.log("Group: " + flatGroup + " Pass: " + pass);
