@@ -26,46 +26,13 @@ pg.connect(connectionString, function (err, client, done) {
         return;
     }
     console.log('Connected to database');
-    // client.query("SELECT * FROM users;", function (error, result) {
-    //     done();
-    //     if (error) {
-    //     }
-    //     //console.log(result);
-    // });
 });
 
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.use("/", express.static(__dirname + '/public'));//serve up the website
-
-// app.set('view engine', 'jade');
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-// app.use('/', routes);
-// app.use('/users', users);
-
-// app.put('/add/user', function (req, res) {
-//     var name = req.body.name;
-//     var email = req.body.email;
-//     var flatGroup = req.body.group;
-//     var pic = req.body.pic;
-//
-//     var q = "insert into users (name,email,group,pic) values ($1,$2,$3,$4) RETURNING name,email,group, pic";
-//     var query = client.query(q, [name, email, flatGroup, pic]);
-//     var results = [];
-//
-//     //error handler for /add_purchases
-//     query.on('error', function () {
-//         res.status(500).send('Error, fail to add to user name:' + name + ' email: ' + email);
-//     });
-// });
 
 
 app.put('/add/user', function (req, res) {
@@ -231,6 +198,38 @@ app.put('/add/group', function (req, res) {
     //After all data is returned, close connection and return results
     query.on('end', function () {
       var obj = { groupname: results[0].groupname, password: results[0].password, notes: results[0].notes };
+
+        res.json(obj);
+        console.log("result: " + obj);
+    });
+});
+
+
+
+app.put('/add/note', function (req, res) {
+    var flatGroup = req.body.group;
+    var title = req.body.notetitle;
+    var content = req.body.notecontent;
+    var owner = req.body.notecreator;
+    var time = req.body.notetimestamp;
+    console.log("Group: " + flatGroup + " Title: " + title);
+
+    var q = "insert into notes (groupname,content, title, creator, currtime) values ($1, $2, $3, $4, $5) RETURNING groupname, title, content, creator";
+    var query = client.query(q, [flatGroup, content, title, owner, time]);
+    var results = [];
+
+    //error handler for /add group
+    query.on('error', function () {
+        res.status(500).send('Error, fail to add to notes:' + title + ' groupname: ' + flatGroup);
+    });
+    //stream results back one row at a time
+    query.on('row', function (row) {
+        results.push(row);
+    });
+
+    //After all data is returned, close connection and return results
+    query.on('end', function () {
+      var obj = { groupname: results[0].groupname, title: results[0].title, content: results[0].content, creator: results[0].creator };
 
         res.json(obj);
         console.log("result: " + obj);
