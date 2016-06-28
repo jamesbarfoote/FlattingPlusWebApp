@@ -160,7 +160,7 @@ app.get('/get/flatgroup', function (req, res) {
 
     //error handler for /get_users
     query.on('error', function () {
-        res.status(500).send('Error, fail to get users: ' + userEmail);
+        res.status(500).send('Error, fail to get group: ' + userEmail);
     });
 
     //stream results back one row at a time
@@ -237,7 +237,32 @@ app.put('/add/note', function (req, res) {
 });
 
 
+//get group
+app.get('/get/notes', function (req, res) {
+    var groupName = req.query.gname;
+    var groupPass = req.query.pass;
+    console.log("get group, name: " + groupName);
+    var q = "SELECT * FROM notes WHERE groupname=$1";
+    var query = client.query(q, [groupName, groupPass]);
 
+    var results = [];
+
+    //error handler for /get_users
+    query.on('error', function () {
+        res.status(500).send('Error, fail to get users: ' + userEmail);
+    });
+
+    //stream results back one row at a time
+    query.on('row', function (row) {
+        results.push(row);
+    });
+
+    //After all data is returned, close connection and return results
+    query.on('end', function () {
+        res.json(results);
+        console.log("result: " + results[0]);
+    });
+});
 
 
 // catch 404 and forward to error handler
