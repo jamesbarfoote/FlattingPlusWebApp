@@ -133,7 +133,7 @@ app.post('/update/user', function (req, res) {
     var userGroup = req.body.group;
     var userPic = req.body.pic;
     console.log(userName + " " + userEmail + " " + userGroup + " " + userPic);
-    var q = "update user set name = $1, flatgroup = $2, pic = $3 where email = $4 RETURNING email, name, pic, groupname";
+    var q = "update users set name = $1, flatgroup = $2, pic = $3 where email = $4 RETURNING email, name, pic, groupname";
     var query = client.query(q, [userName, userGroup, userPic, userEmail]);
     var results = [];
 
