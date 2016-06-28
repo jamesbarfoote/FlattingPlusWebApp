@@ -133,7 +133,7 @@ app.post('/update/user', function (req, res) {
     var userGroup = req.body.group;
     var userPic = req.body.pic;
     console.log(userName + " " + userEmail + " " + userGroup + " " + userPic);
-    var q = "update users set name = $1, flatgroup = $2, pic = $3 where email = $4 RETURNING email, name, pic, groupname";
+    var q = "UPDATE users SET name=($1), flatgroup=($2), pic=($3) where email=($4)";
     var query = client.query(q, [userName, userGroup, userPic, userEmail]);
     var results = [];
 
@@ -149,7 +149,9 @@ app.post('/update/user', function (req, res) {
 
     //after all the data is returned close connection and return result
     query.on('end', function () {
-      var obj = { groupname: results[0].groupname, email: results[0].email, name: results[0].name };
+      var obj = {};
+
+      // var obj = { groupname: results[0].groupname, email: results[0].email, name: results[0].name };
         res.json(obj);
         console.log("result: " + obj);
     });
