@@ -206,31 +206,62 @@ app.put('/add/group', function (req, res) {
 
 
 
-app.put('/add/note', function (req, res) {
-    var flatGroup = req.body.group;
-    var title = req.body.notetitle;
-    var content = req.body.notecontent;
-    var owner = req.body.notecreator;
-    var time = req.body.notetimestamp;
-    console.log(title + ' groupname: ' + flatGroup + ' content: ' + content + ' owner: ' + owner + ' time: ' + time);
+// app.put('/add/note', function (req, res) {
+//     var flatGroup = req.body.group;
+//     var title = req.body.notetitle;
+//     var content = req.body.notecontent;
+//     var owner = req.body.notecreator;
+//     var time = req.body.notetimestamp;
+//     console.log(title + ' groupname: ' + flatGroup + ' content: ' + content + ' owner: ' + owner + ' time: ' + time);
+//
+//     var q = "insert into notes (groupname,content, title, creator, currtime) values ($1, $2, $3, $4, $5) RETURNING groupname, title, content, creator";
+//     var query = client.query(q, [flatGroup, content, title, owner, time]);
+//     var results = [];
+//
+//     //error handler for /add group
+//     query.on('error', function () {
+//         res.status(500).send('Error, fail to add to notes:' + title + ' groupname: ' + flatGroup + ' content: ' + content + ' owner: ' + owner + ' time: ' + time);
+//     });
+//     //stream results back one row at a time
+//     query.on('row', function (row) {
+//         results.push(row);
+//     });
+//
+//     //After all data is returned, close connection and return results
+//     query.on('end', function () {
+//       var obj = { groupname: results[0].groupname, title: results[0].title, content: results[0].content, creator: results[0].creator };
+//
+//         res.json(obj);
+//         console.log("result: " + obj);
+//     });
+// });
 
-    var q = "insert into notes (groupname,content, title, creator, currtime) values ($1, $2, $3, $4, $5) RETURNING groupname, title, content, creator";
-    var query = client.query(q, [flatGroup, content, title, owner, time]);
+app.put('/add/note', function (req, res) {
+  var flatGroup = req.body.group;
+      var title = req.body.notetitle;
+      var content = req.body.notecontent;
+      var owner = req.body.notecreator;
+      var time = req.body.notetimestamp;
+      console.log(title + ' groupname: ' + flatGroup + ' content: ' + content + ' owner: ' + owner + ' time: ' + time);
+
+    var q = "insert into notes (groupname,content, creator, currtime, title) values ($1,$2, $3, $4, $5) RETURNING groupname, title, currtime, creator";
+    var query = client.query(q, [flatGroup, content, owner, time, title]);
     var results = [];
 
-    //error handler for /add group
+    //error handler for /add user
     query.on('error', function () {
-        res.status(500).send('Error, fail to add to notes:' + title + ' groupname: ' + flatGroup + ' content: ' + content + ' owner: ' + owner + ' time: ' + time);
+        res.status(500).send('Error, fail to add note ' + title);
     });
+
     //stream results back one row at a time
     query.on('row', function (row) {
         results.push(row);
     });
 
-    //After all data is returned, close connection and return results
+    //after all the data is returned close connection and return result
     query.on('end', function () {
-      var obj = { groupname: results[0].groupname, title: results[0].title, content: results[0].content, creator: results[0].creator };
-
+      // var ob = JSON.stringify(results);
+      var obj = var obj = { groupname: results[0].groupname, title: results[0].title, creator: results[0].creator };
         res.json(obj);
         console.log("result: " + obj);
     });
