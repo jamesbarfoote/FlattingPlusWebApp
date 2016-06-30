@@ -261,7 +261,7 @@ app.put('/add/note', function (req, res) {
     //after all the data is returned close connection and return result
     query.on('end', function () {
       // var ob = JSON.stringify(results);
-      var obj = var obj = { groupname: results[0].groupname, title: results[0].title, creator: results[0].creator };
+      var obj = { groupname: results[0].groupname, title: results[0].title, creator: results[0].creator };
         res.json(obj);
         console.log("result: " + obj);
     });
