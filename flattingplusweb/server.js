@@ -212,7 +212,7 @@ app.put('/add/note', function (req, res) {
     var content = req.body.notecontent;
     var owner = req.body.notecreator;
     var time = req.body.notetimestamp;
-    console.log("Group: " + flatGroup + " Title: " + title);
+    console.log(title + ' groupname: ' + flatGroup + ' content: ' + content + ' owner: ' + owner + ' time: ' + time);
 
     var q = "insert into notes (groupname,content, title, creator, currtime) values ($1, $2, $3, $4, $5) RETURNING groupname, title, content, creator";
     var query = client.query(q, [flatGroup, content, title, owner, time]);
@@ -220,7 +220,7 @@ app.put('/add/note', function (req, res) {
 
     //error handler for /add group
     query.on('error', function () {
-        res.status(500).send('Error, fail to add to notes:' + title + ' groupname: ' + flatGroup);
+        res.status(500).send('Error, fail to add to notes:' + title + ' groupname: ' + flatGroup + ' content: ' + content + ' owner: ' + owner + ' time: ' + time);
     });
     //stream results back one row at a time
     query.on('row', function (row) {
