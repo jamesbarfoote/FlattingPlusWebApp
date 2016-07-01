@@ -1,6 +1,6 @@
 notes:
 group name, title, content, created by (email), time stamp (last edited) 
 
-create table notes(id serial primary key, groupname varchar, content varchar, creator varchar, currtime timestamp);
+create table notes(id serial primary key, groupname varchar, title varchar, content varchar, creator varchar, currtime varchar);
 
 
