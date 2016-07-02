@@ -308,21 +308,13 @@ app.get('/get/notes', function (req, res) {
   });
 
   fcm.send(message, function(err, response){
+    console.log("in send message");
     if (err) {
       console.log("Something has gone wrong!");
     } else {
       console.log("Successfully sent with response: ", response);
     }
   });
-
-  function newNoteNotification()
-  {
-    console.log("In new note notification");
-
-
-    console.log("Created message");
-
-  }
 
   //After all data is returned, close connection and return results
   query.on('end', function () {
