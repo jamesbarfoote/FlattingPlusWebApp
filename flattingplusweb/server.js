@@ -356,7 +356,8 @@ function sendMessageToUser(deviceId, message)
     method: 'POST',
     headers: {
       'Content-Type' :' application/json',
-      'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
+      'Authorization': 'AIzaSyCthDdDVkI3Hf_-Bazv7WXfIyZSKfhz7xQ'
+      // 'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
     },
     body: JSON.stringify({
     "to" : deviceId,
