@@ -334,22 +334,15 @@ function sendMessageToUser(deviceId, message) {
       'Content-Type' :' application/json',
       'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
     },
-    body: JSON.stringify(
-      { "data": {
-        "message": message
-      },
-        "to" : deviceId
-      }
-    )
+    body: JSON.stringify({ "data": {"message": message},"to" : deviceId})
   }, function(error, response, body) {
     if (error) {
       console.error(error, response, body);
-    }
-    else if (response.statusCode >= 400) {
+    }else if (response.statusCode >= 400) {
       console.error('HTTP Error: '+response.statusCode+' - '+response.statusMessage+'\n'+body);
-    }
-    else {console.log('Done!')}
+    }else {console.log('Done!')}
   });
+}
 
 // sendMessageToUser("d7x...KJQ",{ message: 'Hello puf'});
 
