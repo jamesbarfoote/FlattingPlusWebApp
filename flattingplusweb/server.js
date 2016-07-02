@@ -338,8 +338,7 @@ function sendToUser(deviceId, message)
         'content-type': 'application/json',
         'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0',
         body: JSON.stringify({'data': {'message':message}, 'to': deviceId})
-      },
-      { body: 'I am an attachment' } }
+      }
     ]
   },
   function (error, response, body) {
