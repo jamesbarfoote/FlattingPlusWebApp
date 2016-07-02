@@ -265,17 +265,17 @@ app.put('/add/note', function (req, res) {
   query.on('end', function () {
     // var ob = JSON.stringify(results);
 
-    var message = {
-      to: 'fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', // required
-      collapse_key: 'your_collapse_key',
-      data: {
-        your_custom_data_key: 'your_custom_data_value'
-      },
-      notification: {
-        title: 'Title of your push notification',
-        body: 'Body of your push notification'
-      }
-    };
+    // var message = {
+    //   to: 'fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', // required
+    //   collapse_key: 'your_collapse_key',
+    //   data: {
+    //     your_custom_data_key: 'your_custom_data_value'
+    //   },
+    //   notification: {
+    //     title: 'Title of your push notification',
+    //     body: 'Body of your push notification'
+    //   }
+    // };
 
     console.log("Sending message");
     sendMessageToUser('fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', 'testing message');
@@ -348,15 +348,10 @@ function sendMessageToUser(deviceId, message) {
     else if (response.statusCode >= 400) {
       console.error('HTTP Error: '+response.statusCode+' - '+response.statusMessage+'\n'+body);
     }
-    else {
-      console.log('Done!')
-    }
+    else {console.log('Done!')}
   });
 
-sendMessageToUser(
-  "d7x...KJQ",
-  { message: 'Hello puf'}
-);
+// sendMessageToUser("d7x...KJQ",{ message: 'Hello puf'});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
