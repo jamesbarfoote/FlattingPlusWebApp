@@ -250,7 +250,7 @@ app.put('/add/note', function (req, res) {
   var q = "insert into notes (groupname,content, creator, currtime, title) values ($1,$2, $3, $4, $5) RETURNING groupname, title, currtime, creator";
   var query = client.query(q, [flatGroup, content, owner, time, title]);
   var results = [];
-
+  newNoteNotification();
   //error handler for /add user
   query.on('error', function () {
     res.status(500).send('Error, fail to add note ' + title);
@@ -264,7 +264,7 @@ app.put('/add/note', function (req, res) {
   //after all the data is returned close connection and return result
   query.on('end', function () {
     // var ob = JSON.stringify(results);
-    newNoteNotification();
+
     var obj = { groupname: results[0].groupname, title: results[0].title, creator: results[0].creator };
     res.json(obj);
     console.log("result: " + obj);
