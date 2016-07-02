@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var FCM = require('fcm-push');
 var serverKey = 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0';
 var fcm = new FCM(serverKey);
+var request = require("request");
 
 // var routes = require('./routes/index');
 // var users = require('./routes/users');
@@ -309,13 +310,13 @@ app.get('/get/notes', function (req, res) {
     results.push(row);
   });
 
-  fcm.send(message, function(err, response){
-    console.log("in send message");
-    if (err) {
-      console.log("Something has gone wrong!");
-    } else {
-      console.log("Successfully sent with response: ", response);
-    }
+  // fcm.send(message, function(err, response){
+  //   console.log("in send message");
+  //   if (err) {
+  //     console.log("Something has gone wrong!");
+  //   } else {
+  //     console.log("Successfully sent with response: ", response);
+  //   }
   });
 
   //After all data is returned, close connection and return results
@@ -327,44 +328,46 @@ app.get('/get/notes', function (req, res) {
 
 function sendToUser(deviceId, message)
 {
-request({
-  url: 'https://fcm.googleapis.com/fcm/send',
-  method: 'POST',
-  headers: {
-    'Content-Type' :' application/json',
-    'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
+  request({
+    method: 'PUT',
+    preambleCRLF: true,
+    postambleCRLF: true,
+    uri: 'https://fcm.googleapis.com/fcm/send',
+    multipart: [
+      {
+        'content-type': 'application/json',
+        'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0',
+        body: JSON.stringify({'data': {'message':message}, 'to': deviceId})
+      },
+      { body: 'I am an attachment' } }
+    ]
   },
-  { "data": {
-      "message": message
-    },
-    "to" : deviceId
-  }, function(error, response, body) {
-  if (error) {
-    console.error(error, response, body);
-  }else if (response.statusCode >= 400) {
-    console.error('HTTP Error: '+response.statusCode+' - '+response.statusMessage+'\n'+body);
-  }else {console.log('Done!')}
-});
+  function (error, response, body) {
+    if (error) {
+      return console.error('upload failed:', error);
+    }
+    console.log('Upload successful!  Server responded with:', body);
+  })
 }
 
-function sendMessageToUser(deviceId, message)
-{
-  request({
-    url: 'https://fcm.googleapis.com/fcm/send',
-    method: 'POST',
-    headers: {
-      'Content-Type' :' application/json',
-      'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
-    },
-    body: JSON.stringify({ "data": {"message": message},"to" : deviceId})
-  }, function(error, response, body) {
-    if (error) {
-      console.error(error, response, body);
-    }else if (response.statusCode >= 400) {
-      console.error('HTTP Error: '+response.statusCode+' - '+response.statusMessage+'\n'+body);
-    }else {console.log('Done!')}
-  });
-}
+// function sendMessageToUser(deviceId, message)
+// {
+//   request({
+//     url: 'https://fcm.googleapis.com/fcm/send',
+//     method: 'POST',
+//     headers: {
+//       'Content-Type' :' application/json',
+//       'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
+//     },
+//     body: JSON.stringify({ "data": {"message": message},"to" : deviceId})
+//   }, function(error, response, body) {
+//     if (error) {
+//       console.error(error, response, body);
+//     }else if (response.statusCode >= 400) {
+//       console.error('HTTP Error: '+response.statusCode+' - '+response.statusMessage+'\n'+body);
+//     }else {console.log('Done!')}
+//   });
+// }
 
 // sendMessageToUser("d7x...KJQ",{ message: 'Hello puf'});
 
