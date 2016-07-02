@@ -250,7 +250,7 @@ app.put('/add/note', function (req, res) {
   var q = "insert into notes (groupname,content, creator, currtime, title) values ($1,$2, $3, $4, $5) RETURNING groupname, title, currtime, creator";
   var query = client.query(q, [flatGroup, content, owner, time, title]);
   var results = [];
-  newNoteNotification();
+
   //error handler for /add user
   query.on('error', function () {
     res.status(500).send('Error, fail to add note ' + title);
@@ -264,6 +264,21 @@ app.put('/add/note', function (req, res) {
   //after all the data is returned close connection and return result
   query.on('end', function () {
     // var ob = JSON.stringify(results);
+
+    var message = {
+      to: 'fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', // required
+      collapse_key: 'your_collapse_key',
+      data: {
+        your_custom_data_key: 'your_custom_data_value'
+      },
+      notification: {
+        title: 'Title of your push notification',
+        body: 'Body of your push notification'
+      }
+    };
+
+    console.console.log("Created message");
+    fcm.send(message);
 
     var obj = { groupname: results[0].groupname, title: results[0].title, creator: results[0].creator };
     res.json(obj);
@@ -292,29 +307,21 @@ app.get('/get/notes', function (req, res) {
     results.push(row);
   });
 
+  fcm.send(message, function(err, response){
+    if (err) {
+      console.log("Something has gone wrong!");
+    } else {
+      console.log("Successfully sent with response: ", response);
+    }
+  });
+
   function newNoteNotification()
   {
     console.log("In new note notification");
-    var message = {
-      to: 'fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', // required
-      collapse_key: 'your_collapse_key',
-      data: {
-        your_custom_data_key: 'your_custom_data_value'
-      },
-      notification: {
-        title: 'Title of your push notification',
-        body: 'Body of your push notification'
-      }
-    };
+
 
     console.log("Created message");
-    fcm.send(message, function(err, response){
-      if (err) {
-        console.log("Something has gone wrong!");
-      } else {
-        console.log("Successfully sent with response: ", response);
-      }
-    });
+
   }
 
   //After all data is returned, close connection and return results
