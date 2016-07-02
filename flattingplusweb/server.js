@@ -294,6 +294,7 @@ app.get('/get/notes', function (req, res) {
 
   function newNoteNotification()
   {
+    console.log("In new note notification");
     var message = {
       to: 'fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', // required
       collapse_key: 'your_collapse_key',
@@ -306,6 +307,7 @@ app.get('/get/notes', function (req, res) {
       }
     };
 
+    console.log("Created message");
     fcm.send(message, function(err, response){
       if (err) {
         console.log("Something has gone wrong!");
