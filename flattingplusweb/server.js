@@ -358,7 +358,14 @@ function sendMessageToUser(deviceId, message)
       'Content-Type' :' application/json',
       'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
     },
-    body: JSON.stringify({ "data": {"message": message},"to" : deviceId})
+    body: JSON.stringify({
+    "to" : deviceId,
+    "notification" : {
+      "body" : "great match!",
+      "title" : "Portugal vs. Denmark",
+      "icon" : "myicon"
+    }
+  })
   }, function(error, response, body) {
     if (error) {
       console.error(error, response, body);
