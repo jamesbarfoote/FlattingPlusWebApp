@@ -277,7 +277,7 @@ app.put('/add/note', function (req, res) {
       }
     };
 
-    console.console.log("Created message");
+    console.log("Created message");
     fcm.send(message);
 
     var obj = { groupname: results[0].groupname, title: results[0].title, creator: results[0].creator };
