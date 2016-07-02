@@ -317,7 +317,7 @@ app.get('/get/notes', function (req, res) {
   //   } else {
   //     console.log("Successfully sent with response: ", response);
   //   }
-  });
+  // });
 
   //After all data is returned, close connection and return results
   query.on('end', function () {
@@ -346,7 +346,7 @@ function sendToUser(deviceId, message)
       return console.error('upload failed:', error);
     }
     console.log('Upload successful!  Server responded with:', body);
-  })
+  });
 }
 
 // function sendMessageToUser(deviceId, message)
