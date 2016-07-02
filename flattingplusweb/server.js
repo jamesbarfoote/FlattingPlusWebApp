@@ -279,7 +279,7 @@ app.put('/add/note', function (req, res) {
     // };
 
     console.log("Sending message");
-    sendToUser('fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', 'testing message');
+    sendMessageToUser('fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', { message: 'Hello'});
 
 
 
@@ -326,47 +326,47 @@ app.get('/get/notes', function (req, res) {
   });
 });
 
-function sendToUser(deviceId, message)
-{
-  request({
-    method: 'PUT',
-    preambleCRLF: true,
-    postambleCRLF: true,
-    uri: 'https://fcm.googleapis.com/fcm/send',
-    multipart: [
-      {
-        'content-type': 'application/json',
-        'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0',
-        body: JSON.stringify({'data': {'message':message}, 'to': deviceId})
-      }
-    ]
-  },
-  function (error, response, body) {
-    if (error) {
-      return console.error('upload failed:', error);
-    }
-    console.log('Upload successful!  Server responded with:', body);
-  });
-}
-
-// function sendMessageToUser(deviceId, message)
+// function sendToUser(deviceId, message)
 // {
 //   request({
-//     url: 'https://fcm.googleapis.com/fcm/send',
-//     method: 'POST',
-//     headers: {
-//       'Content-Type' :' application/json',
-//       'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
-//     },
-//     body: JSON.stringify({ "data": {"message": message},"to" : deviceId})
-//   }, function(error, response, body) {
+//     method: 'PUT',
+//     preambleCRLF: true,
+//     postambleCRLF: true,
+//     uri: 'https://fcm.googleapis.com/fcm/send',
+//     multipart: [
+//       {
+//         'content-type': 'application/json',
+//         'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0',
+//         body: JSON.stringify({'data': {'message':message}, 'to': deviceId})
+//       }
+//     ]
+//   },
+//   function (error, response, body) {
 //     if (error) {
-//       console.error(error, response, body);
-//     }else if (response.statusCode >= 400) {
-//       console.error('HTTP Error: '+response.statusCode+' - '+response.statusMessage+'\n'+body);
-//     }else {console.log('Done!')}
+//       return console.error('upload failed:', error);
+//     }
+//     console.log('Upload successful!  Server responded with:', body);
 //   });
 // }
+
+function sendMessageToUser(deviceId, message)
+{
+  request({
+    url: 'https://fcm.googleapis.com/fcm/send',
+    method: 'POST',
+    headers: {
+      'Content-Type' :' application/json',
+      'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
+    },
+    body: JSON.stringify({ "data": {"message": message},"to" : deviceId})
+  }, function(error, response, body) {
+    if (error) {
+      console.error(error, response, body);
+    }else if (response.statusCode >= 400) {
+      console.error('HTTP Error: '+response.statusCode+' - '+response.statusMessage+'\n'+body);
+    }else {console.log('Done!')}
+  });
+}
 
 // sendMessageToUser("d7x...KJQ",{ message: 'Hello puf'});
 
