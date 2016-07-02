@@ -360,7 +360,8 @@ function sendMessageToUser(deviceId, message)
       // 'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
     },
     body: JSON.stringify({
-    "to" : deviceId,
+    'to' : deviceId,
+    'registration_ids': deviceId,
     "notification" : {
       "body" : "great match!",
       "title" : "Portugal vs. Denmark",
