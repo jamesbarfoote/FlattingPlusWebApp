@@ -8,6 +8,12 @@ var FCM = require('fcm-push');
 var serverKey = 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0';
 var fcm = new FCM(serverKey);
 var request = require("request");
+var FirebaseTokenGenerator = require("firebase-token-generator");
+var tokenGenerator = new FirebaseTokenGenerator("<YOUR_FIREBASE_SECRET>");
+var serverToken = tokenGenerator.createToken(
+  { uid: "1", some: "arbitrary", data: "here" },
+  { admin: true }
+);
 
 // var routes = require('./routes/index');
 // var users = require('./routes/users');
@@ -356,7 +362,7 @@ function sendMessageToUser(deviceId, message)
     method: 'POST',
     headers: {
       'Content-Type' :' application/json',
-      'Authorization': 'AIzaSyCthDdDVkI3Hf_-Bazv7WXfIyZSKfhz7xQ'
+      'Authorization': serverToken
       // 'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
     },
     body: JSON.stringify({
