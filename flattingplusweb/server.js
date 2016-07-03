@@ -9,7 +9,7 @@ var serverKey = 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0';
 var fcm = new FCM(serverKey);
 var request = require("request");
 var FirebaseTokenGenerator = require("firebase-token-generator");
-var tokenGenerator = new FirebaseTokenGenerator("<YOUR_FIREBASE_SECRET>");
+var tokenGenerator = new FirebaseTokenGenerator("jzH5B1FovmV3vOHq5DprnDd3qqOVw2hw0XjmpWPB");
 var serverToken = tokenGenerator.createToken(
   { uid: "1", some: "arbitrary", data: "here" },
   { admin: true }
