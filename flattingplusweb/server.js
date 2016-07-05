@@ -13,7 +13,7 @@ var firebase = require("firebase");
 
 
 var FirebaseTokenGenerator = require("firebase-token-generator");
-var tokenGenerator = new firebaseTokenGenerator("jzH5B1FovmV3vOHq5DprnDd3qqOVw2hw0XjmpWPB");
+var tokenGenerator = new FirebaseTokenGenerator("jzH5B1FovmV3vOHq5DprnDd3qqOVw2hw0XjmpWPB");
 var serverToken = tokenGenerator.createToken(
   { uid: "flattingplus-webserver-the-best", some: "arbitrary", data: "here" },
   { admin: true }
@@ -28,13 +28,13 @@ var config = {
 firebase.initializeApp(config);
 var ref = firebase.database().ref();
 // var ref = new firebase("https://flattingplus.firebaseio.com/");
-ref.authWithCustomToken(serverToken, function(error, authData) {
-  if (error) {
-    console.log("Login Failed!", error);
-  } else {
-    console.log("Login Succeeded!", authData);
-  }
-});
+// ref.authWithCustomToken(serverToken, function(error, authData) {
+//   if (error) {
+//     console.log("Login Failed!", error);
+//   } else {
+//     console.log("Login Succeeded!", authData);
+//   }
+// });
 
 // var routes = require('./routes/index');
 // var users = require('./routes/users');
