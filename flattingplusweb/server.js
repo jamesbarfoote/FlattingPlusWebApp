@@ -383,7 +383,7 @@ function sendMessageToUser(deviceId, message)
     method: 'POST',
     headers: {
       'Content-Type' :' application/json',
-      'Authorization': serverToken
+      'Authorization': serverKey
       // 'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
     },
     body: JSON.stringify({
