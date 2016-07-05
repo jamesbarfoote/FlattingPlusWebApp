@@ -8,12 +8,12 @@ var FCM = require('fcm-push');
 var serverKey = 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0';
 var fcm = new FCM(serverKey);
 var request = require("request");
-var Firebase = require("firebase");
+var firebase = require("firebase");
 
 
-    Firebase.initializeApp(config);
+
 var FirebaseTokenGenerator = require("firebase-token-generator");
-var tokenGenerator = new FirebaseTokenGenerator("jzH5B1FovmV3vOHq5DprnDd3qqOVw2hw0XjmpWPB");
+var tokenGenerator = new firebaseTokenGenerator("jzH5B1FovmV3vOHq5DprnDd3qqOVw2hw0XjmpWPB");
 var serverToken = tokenGenerator.createToken(
   { uid: "flattingplus-webserver-the-best", some: "arbitrary", data: "here" },
   { admin: true }
@@ -25,9 +25,10 @@ var config = {
       databaseURL: "https://flattingplus.firebaseio.com",
       storageBucket: "bucket.appspot.com",
     };
-
-var ref = new Firebase("https://flattingplus.firebaseio.com/");
-ref.authWithCustomToken(token, function(error, authData) {
+firebase.initializeApp(config);
+var ref = firebase.database().ref();
+// var ref = new firebase("https://flattingplus.firebaseio.com/");
+ref.authWithCustomToken(serverToken, function(error, authData) {
   if (error) {
     console.log("Login Failed!", error);
   } else {
