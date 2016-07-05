@@ -1,3 +1,6 @@
 curl -X PUT -H "Content-Type: application/json" -d '{"name":"jim","email":"test@test.com", "group":"s", "pic":""}' "https://flattingplus.herokuapp.com/add/user"
 
 curl -X POST -H "Content-Type: application/json" -d '{"name":"james","email":"jimmy2174@gmail.com", "group":"unique", "pic":"https://lh4.googleusercontent.com/-KqJ0M5gYxwU/AAAAAAAAAAI/AAAAAAAAA60/6ZvBg83GS3k/photo.jpg"}' "https://flattingplus.herokuapp.com/update/user"
+
+
+curl --header "Authorization: key=AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0" --header Content-Type:"application/json" https://fcm.googleapis.com/fcm/send -d "{\"registration_ids\":[\"fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT\"]}"

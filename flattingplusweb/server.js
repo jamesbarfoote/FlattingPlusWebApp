@@ -383,18 +383,26 @@ function sendMessageToUser(deviceId, message)
     method: 'POST',
     headers: {
       'Content-Type' :' application/json',
-      'Authorization': serverKey
+      'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
       // 'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
     },
-    body: JSON.stringify({
-    'to' : deviceId,
-    'registration_ids': deviceId,
-    "notification" : {
-      "body" : "great match!",
-      "title" : "Portugal vs. Denmark",
-      "icon" : "myicon"
-    }
-  })
+    body: JSON.stringify(
+  //     {
+  //   'to' : deviceId,
+  //   'registration_ids': deviceId,
+  //   "notification" : {
+  //     "body" : "great match!",
+  //     "title" : "Portugal vs. Denmark",
+  //     "icon" : "myicon"
+  //   }
+  // }
+  { "notification": {
+      "title": "Portugal vs. Denmark",
+      "text": "5 to 1"
+    },
+    "to" : "fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT"
+  }
+)
   }, function(error, response, body) {
     if (error) {
       console.error(error, response, body);
