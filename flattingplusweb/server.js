@@ -4,7 +4,7 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var FCM = require('fcm-push');
+var FCM = require('fcm-node');
 var serverKey = 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0';
 var fcm = new FCM(serverKey);
 var request = require("request");
@@ -306,8 +306,27 @@ app.put('/add/note', function (req, res) {
     // };
 
     console.log("Sending message");
-    sendMessageToUser('fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', { message: 'Hello'});
+    // sendMessageToUser('fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', { message: 'Hello'});
+    var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+        to: 'fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT',
+        collapse_key: '0', 
+        data: {
+            your_custom_data_key: 'your_custom_data_value'
+        },
+        notification: {
+            title: 'Title of your push notification',
+            body: 'Body of your push notification',
+            icon: 'ic_launcher' //now required
+        }
+    };
 
+    fcm.send(message, function(err, response){
+        if (err) {
+            console.log("Something has gone wrong!");
+        } else {
+            console.log("Successfully sent with response: ", response);
+        }
+    });
 
 
     var obj = { groupname: results[0].groupname, title: results[0].title, creator: results[0].creator };
