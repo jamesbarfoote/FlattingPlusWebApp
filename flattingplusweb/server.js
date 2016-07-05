@@ -400,7 +400,8 @@ function sendMessageToUser(deviceId, message)
       "title": "Portugal vs. Denmark",
       "text": "5 to 1"
     },
-    "to" : "fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT"
+    "to" : "fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT",
+    "registration_ids" : "fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT"
   }
 )
   }, function(error, response, body) {
