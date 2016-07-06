@@ -279,7 +279,7 @@ app.put('/add/group', function (req, res) {
 
   //error handler for /add group
   query.on('error', function () {
-    res.status(500).send('Error, fail to add to user name:' + name + ' email: ' + email);
+    res.status(500).send('Error, fail to add to group:' + flatGroup + ' email: ' + userEmail);
   });
   //stream results back one row at a time
   query.on('row', function (row) {
@@ -298,7 +298,7 @@ app.put('/add/group', function (req, res) {
 function addToUsersInGroup(groupName, email)
 {
   console.log("Add to users in group: " + groupName + " " + email);
-  var q = "insert into usersInGroup (userEmail,groupName) values ($1, $2) RETURNING userEmail, groupName";
+  var q = "insert into usersInGroup (email,groupName) values ($1, $2) RETURNING email, groupName";
   // var q = "insert into flatgroup (groupname,password) "
   //     + "values ($1,$2) RETURNING id, groupname,password, notes, shoppinglist, calendar, money";
   var query = client.query(q, [email, groupName]);

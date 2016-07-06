@@ -5,3 +5,7 @@ create table notes(id serial primary key, groupname varchar, title varchar, cont
 
 
 create table usersInGroup(userEmail varchar REFERENCES users(email), groupName varchar REFERENCES flatgroup(groupname));
+
+select firebaseid from users join UsersInGroup on id Where groupname='unique'
+
+select firebaseid from users natural join id Where groupname='unique'
