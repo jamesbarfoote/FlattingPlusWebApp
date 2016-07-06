@@ -306,7 +306,7 @@ function addToUsersInGroup(groupName, email)
 
   //error handler for /add group
   query.on('error', function () {
-    res.status(500).send('Error, fail to add to user to groups name:' + name + ' email: ' + email);
+    console.log('Error, fail to add to user to groups name:' + name + ' email: ' + email);
   });
   //stream results back one row at a time
   query.on('row', function (row) {
@@ -317,7 +317,7 @@ function addToUsersInGroup(groupName, email)
   query.on('end', function () {
     var obj = { groupname: results[0].groupname, password: results[0].password, notes: results[0].notes };
 
-    res.json(obj);
+    // res.json(obj);
     console.log("result: " + obj);
   });
 }
