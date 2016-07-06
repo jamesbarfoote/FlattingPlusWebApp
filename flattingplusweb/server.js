@@ -65,16 +65,43 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+function getFireIDs(groupName)
+{
+  //select firebaseid from users join UsersInGroup on useremail Where groupname=groupName
+
+  var q = "select firebaseid from users join UsersInGroup on useremail Where groupname=$1";
+  var query = client.query(q, [groupName]);
+
+  var results = [];
+
+  //error handler for /get_users
+  query.on('error', function () {
+    console.log('Error, fail to get users from group: ' + groupName);
+  });
+
+  //stream results back one row at a time
+  query.on('row', function (row) {
+    console.log('Row ' + row);
+    results.push(row);
+  });
+
+  //After all data is returned, close connection and return results
+  query.on('end', function () {
+    return results.toString();
+  });
+}
 
 app.put('/add/user', function (req, res) {
   var name = req.body.name;
   var email = req.body.email;
   var flatGroup = req.body.group;
   var pic = req.body.pic;
+  var fireToken = req.body.token;
 
-  console.log("name: " + name + " email: " + email);
-  var q = "insert into users (email,name, pic, flatgroup) values ($1,$2, $3, $4) RETURNING email, name, flatgroup";
-  var query = client.query(q, [email, name, pic, flatGroup]);
+
+  console.log("name: " + name + " email: " + email + " token: " + fireToken);
+  var q = "insert into users (email,name, pic, flatgroup, firebaseid) values ($1,$2, $3, $4, $5) RETURNING email, name, flatgroup";
+  var query = client.query(q, [email, name, pic, flatGroup, fireToken]);
   var results = [];
 
   //error handler for /add user
@@ -319,24 +346,11 @@ app.put('/add/note', function (req, res) {
 
   //after all the data is returned close connection and return result
   query.on('end', function () {
-    // var ob = JSON.stringify(results);
-
-    // var message = {
-    //   to: 'fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', // required
-    //   collapse_key: 'your_collapse_key',
-    //   data: {
-    //     your_custom_data_key: 'your_custom_data_value'
-    //   },
-    //   notification: {
-    //     title: 'Title of your push notification',
-    //     body: 'Body of your push notification'
-    //   }
-    // };
-
+    var toDevices = getFireIDs(flatGroup);
     console.log("Sending message");
     // sendMessageToUser('fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', { message: 'Hello'});
     var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
-        to: 'fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT',
+        to: toDevices,
         collapse_key: '0',
         data: {
             your_custom_data_key: 'your_custom_data_value'
@@ -391,42 +405,42 @@ app.get('/get/notes', function (req, res) {
 });
 
 
-function sendMessageToUser(deviceId, message)
-{
-  request({
-    url: 'https://fcm.googleapis.com/fcm/send',
-    method: 'POST',
-    headers: {
-      'Content-Type' :' application/json',
-      'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
-      // 'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
-    },
-    body: JSON.stringify(
-  //     {
-  //   'to' : deviceId,
-  //   'registration_ids': deviceId,
-  //   "notification" : {
-  //     "body" : "great match!",
-  //     "title" : "Portugal vs. Denmark",
-  //     "icon" : "myicon"
-  //   }
-  // }
-  { "notification": {
-      "title": "Portugal vs. Denmark",
-      "text": "5 to 1"
-    },
-    "to" : "fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT",
-    "registration_ids" : "fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT"
-  }
-)
-  }, function(error, response, body) {
-    if (error) {
-      console.error(error, response, body);
-    }else if (response.statusCode >= 400) {
-      console.error('HTTP Error: '+response.statusCode+' - '+response.statusMessage+'\n'+body);
-    }else {console.log('Done!')}
-  });
-}
+// function sendMessageToUser(deviceId, message)
+// {
+//   request({
+//     url: 'https://fcm.googleapis.com/fcm/send',
+//     method: 'POST',
+//     headers: {
+//       'Content-Type' :' application/json',
+//       'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
+//       // 'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
+//     },
+//     body: JSON.stringify(
+//   //     {
+//   //   'to' : deviceId,
+//   //   'registration_ids': deviceId,
+//   //   "notification" : {
+//   //     "body" : "great match!",
+//   //     "title" : "Portugal vs. Denmark",
+//   //     "icon" : "myicon"
+//   //   }
+//   // }
+//   { "notification": {
+//       "title": "Portugal vs. Denmark",
+//       "text": "5 to 1"
+//     },
+//     "to" : "fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT",
+//     "registration_ids" : "fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT"
+//   }
+// )
+//   }, function(error, response, body) {
+//     if (error) {
+//       console.error(error, response, body);
+//     }else if (response.statusCode >= 400) {
+//       console.error('HTTP Error: '+response.statusCode+' - '+response.statusMessage+'\n'+body);
+//     }else {console.log('Done!')}
+//   });
+// }
 
 // sendMessageToUser("d7x...KJQ",{ message: 'Hello puf'});
 
