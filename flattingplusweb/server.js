@@ -9,6 +9,7 @@ var serverKey = 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0';
 var fcm = new FCM(serverKey);
 var request = require("request");
 var firebase = require("firebase");
+var toDevices;
 
 
 
@@ -27,17 +28,6 @@ var config = {
     };
 firebase.initializeApp(config);
 var ref = firebase.database().ref();
-// var ref = new firebase("https://flattingplus.firebaseio.com/");
-// ref.authWithCustomToken(serverToken, function(error, authData) {
-//   if (error) {
-//     console.log("Login Failed!", error);
-//   } else {
-//     console.log("Login Succeeded!", authData);
-//   }
-// });
-
-// var routes = require('./routes/index');
-// var users = require('./routes/users');
 
 var app = express();
 
@@ -87,6 +77,7 @@ function getFireIDs(groupName)
 
   //After all data is returned, close connection and return results
   query.on('end', function () {
+    toDevices = results.toString();
     return results.toString();
   });
 }
@@ -346,7 +337,6 @@ app.put('/add/note', function (req, res) {
 
   //after all the data is returned close connection and return result
   query.on('end', function () {
-    var toDevices = getFireIDs(flatGroup);
     console.log("Sending message: " + toDevices);
     // sendMessageToUser('fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', { message: 'Hello'});
     var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
