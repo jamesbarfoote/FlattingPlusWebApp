@@ -206,10 +206,43 @@ app.get('/get/flatgroup', function (req, res) {
   });
 });
 
+//Get group and add to usersingroup if creditentials match
+app.get('/get/flatgroup/add', function (req, res) {
+  var groupName = req.query.gname;
+  var groupPass = req.query.pass;
+  var email = req.query.email;
+  console.log("get group, name: " + groupName + " password: " + groupPass + " email: " + email);
+  var q = "SELECT * FROM flatgroup WHERE groupname=$1 and password=$2";
+  var query = client.query(q, [groupName, groupPass]);
+
+  var results = [];
+
+  //error handler for /get_users
+  query.on('error', function () {
+    res.status(500).send('Error, fail to get group: ' + userEmail);
+  });
+
+  //stream results back one row at a time
+  query.on('row', function (row) {
+    results.push(row);
+  });
+
+  //After all data is returned, close connection and return results
+  query.on('end', function () {
+    if(results > 0)
+    {
+      addToUsersInGroup(groupName, email);
+    }
+    res.json(results);
+    console.log("result: " + results[0]);
+  });
+});
+
 app.put('/add/group', function (req, res) {
   var flatGroup = req.body.group;
   var pass = req.body.gpass;
-  console.log("Group: " + flatGroup + " Pass: " + pass);
+  var userEmail = req.body.email;
+  console.log("Group: " + flatGroup + " Pass: " + pass + " Email: " + userEmail);
 
   var q = "insert into flatgroup (groupname,password) values ($1, $2) RETURNING groupname, password, notes, shoppinglist, calendar, money";
   // var q = "insert into flatgroup (groupname,password) "
@@ -229,43 +262,38 @@ app.put('/add/group', function (req, res) {
   //After all data is returned, close connection and return results
   query.on('end', function () {
     var obj = { groupname: results[0].groupname, password: results[0].password, notes: results[0].notes };
-
+    addToUsersInGroup(flatGroup, userEmail);
     res.json(obj);
     console.log("result: " + obj);
   });
 });
 
+function addToUsersInGroup(groupName, email)
+{
+  console.log("Add to users in group: " + groupName + " " + email);
+  var q = "insert into usersInGroup (userEmail,groupName) values ($1, $2) RETURNING userEmail, groupName";
+  // var q = "insert into flatgroup (groupname,password) "
+  //     + "values ($1,$2) RETURNING id, groupname,password, notes, shoppinglist, calendar, money";
+  var query = client.query(q, [email, groupName]);
+  var results = [];
 
+  //error handler for /add group
+  query.on('error', function () {
+    res.status(500).send('Error, fail to add to user to groups name:' + name + ' email: ' + email);
+  });
+  //stream results back one row at a time
+  query.on('row', function (row) {
+    results.push(row);
+  });
 
-// app.put('/add/note', function (req, res) {
-//     var flatGroup = req.body.group;
-//     var title = req.body.notetitle;
-//     var content = req.body.notecontent;
-//     var owner = req.body.notecreator;
-//     var time = req.body.notetimestamp;
-//     console.log(title + ' groupname: ' + flatGroup + ' content: ' + content + ' owner: ' + owner + ' time: ' + time);
-//
-//     var q = "insert into notes (groupname,content, title, creator, currtime) values ($1, $2, $3, $4, $5) RETURNING groupname, title, content, creator";
-//     var query = client.query(q, [flatGroup, content, title, owner, time]);
-//     var results = [];
-//
-//     //error handler for /add group
-//     query.on('error', function () {
-//         res.status(500).send('Error, fail to add to notes:' + title + ' groupname: ' + flatGroup + ' content: ' + content + ' owner: ' + owner + ' time: ' + time);
-//     });
-//     //stream results back one row at a time
-//     query.on('row', function (row) {
-//         results.push(row);
-//     });
-//
-//     //After all data is returned, close connection and return results
-//     query.on('end', function () {
-//       var obj = { groupname: results[0].groupname, title: results[0].title, content: results[0].content, creator: results[0].creator };
-//
-//         res.json(obj);
-//         console.log("result: " + obj);
-//     });
-// });
+  //After all data is returned, close connection and return results
+  query.on('end', function () {
+    var obj = { groupname: results[0].groupname, password: results[0].password, notes: results[0].notes };
+
+    res.json(obj);
+    console.log("result: " + obj);
+  });
+}
 
 app.put('/add/note', function (req, res) {
   var flatGroup = req.body.group;
@@ -315,7 +343,7 @@ app.put('/add/note', function (req, res) {
         },
         notification: {
             title: 'New note added',
-            body: content,
+            body: contents,
             icon: 'ic_launcher' //now required
         }
     };
@@ -355,16 +383,6 @@ app.get('/get/notes', function (req, res) {
   query.on('row', function (row) {
     results.push(row);
   });
-
-  // fcm.send(message, function(err, response){
-  //   console.log("in send message");
-  //   if (err) {
-  //     console.log("Something has gone wrong!");
-  //   } else {
-  //     console.log("Successfully sent with response: ", response);
-  //   }
-  // });
-
   //After all data is returned, close connection and return results
   query.on('end', function () {
     res.json(results);
@@ -372,28 +390,6 @@ app.get('/get/notes', function (req, res) {
   });
 });
 
-// function sendToUser(deviceId, message)
-// {
-//   request({
-//     method: 'PUT',
-//     preambleCRLF: true,
-//     postambleCRLF: true,
-//     uri: 'https://fcm.googleapis.com/fcm/send',
-//     multipart: [
-//       {
-//         'content-type': 'application/json',
-//         'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0',
-//         body: JSON.stringify({'data': {'message':message}, 'to': deviceId})
-//       }
-//     ]
-//   },
-//   function (error, response, body) {
-//     if (error) {
-//       return console.error('upload failed:', error);
-//     }
-//     console.log('Upload successful!  Server responded with:', body);
-//   });
-// }
 
 function sendMessageToUser(deviceId, message)
 {
