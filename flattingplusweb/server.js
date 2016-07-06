@@ -69,7 +69,7 @@ function getFireIDs(groupName)
 {
   //select firebaseid from users join UsersInGroup on useremail Where groupname=groupName
 
-  var q = "select firebaseid from users join UsersInGroup on useremail Where groupname=$1";
+  var q = "select firebaseid from users natural join usersingroup email Where groupname=$1";
   var query = client.query(q, [groupName]);
 
   var results = [];

@@ -8,4 +8,4 @@ create table usersInGroup(userEmail varchar REFERENCES users(email), groupName v
 
 select firebaseid from users join UsersInGroup on id Where groupname='unique'
 
-select firebaseid from users natural join id Where groupname='unique'
+select firebaseid from users natural join usersingroup email Where groupname='unique3';
