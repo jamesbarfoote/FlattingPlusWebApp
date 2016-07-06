@@ -357,7 +357,7 @@ app.put('/add/note', function (req, res) {
         },
         notification: {
             title: 'New note added',
-            body: contents,
+            body: 'message',
             icon: 'ic_launcher' //now required
         }
     };
