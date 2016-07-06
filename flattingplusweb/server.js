@@ -337,10 +337,11 @@ app.put('/add/note', function (req, res) {
 
   //after all the data is returned close connection and return result
   query.on('end', function () {
-    console.log("Sending message: " + toDevices);
+    getFireIDs(flatGroup);
+    console.log("Sending message: " + toDevices.toString());
     // sendMessageToUser('fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', { message: 'Hello'});
     var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
-        to: toDevices,
+        to: toDevices.toString(),
         collapse_key: '0',
         data: {
             your_custom_data_key: 'your_custom_data_value'
