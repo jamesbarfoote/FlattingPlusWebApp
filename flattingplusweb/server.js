@@ -292,7 +292,7 @@ request({
         'project_id': senderID
     },
     //Lets post the following key/values as form
-    form: {
+    json: {
         "operation": "create",
         "notification_key_name": flatGroup,
         "registration_ids": [fireToken]
