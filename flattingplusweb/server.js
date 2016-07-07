@@ -9,6 +9,7 @@ var serverKey = 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0';
 var fcm = new FCM(serverKey);
 var request = require("request");
 var firebase = require("firebase");
+var senderID = '990776252040'
 var toDevices;
 
 
@@ -58,7 +59,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 function getFireIDs(groupName)
 {
   //select firebaseid from users join UsersInGroup on useremail Where groupname=groupName
-
+  console.log("get firebase ids: " + groupName);
   var q = "select firebaseid from users natural join usersingroup email Where groupname=$1";
   var query = client.query(q, [groupName]);
 
@@ -260,6 +261,7 @@ app.put('/add/group', function (req, res) {
   var flatGroup = req.body.group;
   var pass = req.body.gpass;
   var userEmail = req.body.email;
+  var fireToken = req.body.token;
   console.log("Group: " + flatGroup + " Pass: " + pass + " Email: " + userEmail);
 
   var q = "insert into flatgroup (groupname,password) values ($1, $2) RETURNING groupname, password, notes, shoppinglist, calendar, money";
@@ -279,6 +281,29 @@ app.put('/add/group', function (req, res) {
 
   //After all data is returned, close connection and return results
   query.on('end', function () {
+    //Lets configure and request
+request({
+    url: 'https://android.googleapis.com/gcm/notification', //URL to hit
+    //qs: {from: 'blog example', time: +new Date()}, //Query string data
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': serverKey,
+        'project_id': senderID
+    },
+    //Lets post the following key/values as form
+    form: {
+        "operation": "create",
+        "notification_key_name": flatGroup,
+        "registration_ids": [fireToken]
+    }
+}, function(error, response, body){
+    if(error) {
+        console.log(error);
+    } else {
+        console.log(response.statusCode, body);
+    }
+});
     var obj = { groupname: results[0].groupname, password: results[0].password, notes: results[0].notes };
     addToUsersInGroup(flatGroup, userEmail);
     res.json(obj);
