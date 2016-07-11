@@ -262,7 +262,7 @@ app.put('/add/group', function (req, res) {
   var pass = req.body.gpass;
   var userEmail = req.body.email;
   var fireToken = req.body.token;
-  var key = '';
+  var groupkey = '';
 
   console.log("about to register a new group with firebase");
 request({
@@ -288,13 +288,14 @@ console.log('status = ' + response.statusCode);
       console.log(error);
   } else {
       console.log(response.statusCode, body);
-      key = body['notification_key'];
+      groupkey = body['notification_key'];
       // console.log("body['notification_key']: " + body['notification_key']);
       // key = body[0].notification_key;
   }
 });
 
-  console.log("Group: " + flatGroup + " Pass: " + pass + " Email: " + userEmail + " Key: " + key);
+  console.log("Key: " + groupkey);
+  console.log("Group: " + flatGroup + " Pass: " + pass + " Email: " + userEmail + " Key: " + groupkey);
 
   var q = "insert into flatgroup (groupname,password, notificationid) values ($1, $2, $3) RETURNING groupname, password, notes, shoppinglist, calendar, money";
   // var q = "insert into flatgroup (groupname,password) "
