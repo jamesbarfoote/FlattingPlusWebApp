@@ -288,8 +288,7 @@ console.log('status = ' + response.statusCode);
       console.log(error);
   } else {
       console.log(response.statusCode, body);
-      var bod = body;
-      key = bod.body.notification_key;
+      key = body[0].notification_key;
   }
 });
 
