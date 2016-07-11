@@ -282,6 +282,9 @@ app.put('/add/group', function (req, res) {
   //After all data is returned, close connection and return results
   query.on('end', function () {
     //Lets configure and request
+    console.log("about to register a new group with firebase");
+    var res;
+    var bod;
 request({
     url: 'https://android.googleapis.com/gcm/notification', //URL to hit
     //qs: {from: 'blog example', time: +new Date()}, //Query string data
@@ -298,12 +301,15 @@ request({
         "registration_ids": [fireToken]
     }
 }, function(error, response, body){
+  res = response;
+  bod = body;
     if(error) {
         console.log(error);
     } else {
         console.log(response.statusCode, body);
     }
 });
+    console.log('status = ' + res.statusCode + ' body= ' + bod);
     var obj = { groupname: results[0].groupname, password: results[0].password, notes: results[0].notes };
     addToUsersInGroup(flatGroup, userEmail);
     res.json(obj);
