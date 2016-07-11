@@ -291,36 +291,38 @@ console.log('status = ' + response.statusCode);
       groupkey = body['notification_key'];
       // console.log("body['notification_key']: " + body['notification_key']);
       // key = body[0].notification_key;
+
+      console.log("Key: " + groupkey);
+      console.log("Group: " + flatGroup + " Pass: " + pass + " Email: " + userEmail + " Key: " + groupkey);
+
+      var q = "insert into flatgroup (groupname,password, notificationid) values ($1, $2, $3) RETURNING groupname, password, notes, shoppinglist, calendar, money";
+      // var q = "insert into flatgroup (groupname,password) "
+      //     + "values ($1,$2) RETURNING id, groupname,password, notes, shoppinglist, calendar, money";
+      var query = client.query(q, [flatGroup, pass, key]);
+      var results = [];
+
+      //error handler for /add group
+      query.on('error', function () {
+        res.status(500).send('Error, fail to add to group:' + flatGroup + ' email: ' + userEmail);
+      });
+      //stream results back one row at a time
+      query.on('row', function (row) {
+        results.push(row);
+      });
+
+      //After all data is returned, close connection and return results
+      query.on('end', function () {
+        //Lets configure and request
+
+        var obj = { groupname: results[0].groupname, password: results[0].password, notes: results[0].notes };
+        addToUsersInGroup(flatGroup, userEmail);
+        res.json(obj);
+        console.log("result: " + obj);
+      });
   }
 });
 
-  console.log("Key: " + groupkey);
-  console.log("Group: " + flatGroup + " Pass: " + pass + " Email: " + userEmail + " Key: " + groupkey);
 
-  var q = "insert into flatgroup (groupname,password, notificationid) values ($1, $2, $3) RETURNING groupname, password, notes, shoppinglist, calendar, money";
-  // var q = "insert into flatgroup (groupname,password) "
-  //     + "values ($1,$2) RETURNING id, groupname,password, notes, shoppinglist, calendar, money";
-  var query = client.query(q, [flatGroup, pass, key]);
-  var results = [];
-
-  //error handler for /add group
-  query.on('error', function () {
-    res.status(500).send('Error, fail to add to group:' + flatGroup + ' email: ' + userEmail);
-  });
-  //stream results back one row at a time
-  query.on('row', function (row) {
-    results.push(row);
-  });
-
-  //After all data is returned, close connection and return results
-  query.on('end', function () {
-    //Lets configure and request
-
-    var obj = { groupname: results[0].groupname, password: results[0].password, notes: results[0].notes };
-    addToUsersInGroup(flatGroup, userEmail);
-    res.json(obj);
-    console.log("result: " + obj);
-  });
 });
 
 // function addNotificationKeyToGroup(flatGroup, jsonBody)
