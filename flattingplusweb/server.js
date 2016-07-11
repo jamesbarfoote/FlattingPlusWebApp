@@ -288,7 +288,7 @@ request({
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': serverKey,
+        'Authorization': 'key='+serverKey,
         'project_id': senderID
     },
     //Lets post the following key/values as form
