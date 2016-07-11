@@ -262,12 +262,43 @@ app.put('/add/group', function (req, res) {
   var pass = req.body.gpass;
   var userEmail = req.body.email;
   var fireToken = req.body.token;
-  console.log("Group: " + flatGroup + " Pass: " + pass + " Email: " + userEmail);
+  var key = '';
 
-  var q = "insert into flatgroup (groupname,password) values ($1, $2) RETURNING groupname, password, notes, shoppinglist, calendar, money";
+  console.log("about to register a new group with firebase");
+request({
+  url: 'https://android.googleapis.com/gcm/notification', //URL to hit
+  //qs: {from: 'blog example', time: +new Date()}, //Query string data
+  method: 'POST',
+  headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'key='+serverKey,
+      'project_id': senderID
+  },
+  //Lets post the following key/values as form
+  json: {
+      "operation": "create",
+      "notification_key_name": flatGroup,
+      "registration_ids": [fireToken]
+  }
+}, function(error, response, body){
+console.log('error: ' + error);
+console.log('body= ' + body);
+console.log('status = ' + response.statusCode);
+  if(error) {
+      console.log(error);
+  } else {
+      console.log(response.statusCode, body);
+      var bod = body;
+      key = bod.body.notification_key;
+  }
+});
+
+  console.log("Group: " + flatGroup + " Pass: " + pass + " Email: " + userEmail + " Key: " + key);
+
+  var q = "insert into flatgroup (groupname,password, notificationid) values ($1, $2, $3) RETURNING groupname, password, notes, shoppinglist, calendar, money";
   // var q = "insert into flatgroup (groupname,password) "
   //     + "values ($1,$2) RETURNING id, groupname,password, notes, shoppinglist, calendar, money";
-  var query = client.query(q, [flatGroup, pass]);
+  var query = client.query(q, [flatGroup, pass, key]);
   var results = [];
 
   //error handler for /add group
@@ -282,32 +313,6 @@ app.put('/add/group', function (req, res) {
   //After all data is returned, close connection and return results
   query.on('end', function () {
     //Lets configure and request
-    console.log("about to register a new group with firebase");
-request({
-    url: 'https://android.googleapis.com/gcm/notification', //URL to hit
-    //qs: {from: 'blog example', time: +new Date()}, //Query string data
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'key='+serverKey,
-        'project_id': senderID
-    },
-    //Lets post the following key/values as form
-    json: {
-        "operation": "create",
-        "notification_key_name": flatGroup,
-        "registration_ids": [fireToken]
-    }
-}, function(error, response, body){
-  console.log('error: ' + error);
-  console.log('body= ' + body);
-  console.log('status = ' + response.statusCode);
-    if(error) {
-        console.log(error);
-    } else {
-        console.log(response.statusCode, body);
-    }
-});
 
     var obj = { groupname: results[0].groupname, password: results[0].password, notes: results[0].notes };
     addToUsersInGroup(flatGroup, userEmail);
@@ -315,6 +320,37 @@ request({
     console.log("result: " + obj);
   });
 });
+
+// function addNotificationKeyToGroup(flatGroup, jsonBody)
+// {
+//   var key = jsonBody.body.notification_key;
+//   var flat = flatGroup;
+//   console.log("add key to group. Flat: " + flat + " key: " + key);
+//
+//   var q = "UPDATE flatgroup SET nofificationid=($1) where groupname=($2)";
+//   var query = client.query(q, [key, flat]);
+//   var results = [];
+//
+//   //error handler for /update_cart
+//   query.on('error', function () {
+//     res.status(500).send('Error, failed to update group :' + userName + ' email: ' + userEmail);
+//   });
+//
+//   //stream results back one row at a time
+//   query.on('row', function (row) {
+//     results.push(row);
+//   });
+//
+//   //after all the data is returned close connection and return result
+//   query.on('end', function () {
+//     var obj = {};
+//
+//     // var obj = { groupname: results[0].groupname, email: results[0].email, name: results[0].name };
+//     res.json(obj);
+//     console.log("result: " + obj);
+//   });
+// }
+
 
 function addToUsersInGroup(groupName, email)
 {
