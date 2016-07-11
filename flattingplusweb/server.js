@@ -298,7 +298,7 @@ console.log('status = ' + response.statusCode);
       var q = "insert into flatgroup (groupname,password, notificationid) values ($1, $2, $3) RETURNING groupname, password, notes, shoppinglist, calendar, money";
       // var q = "insert into flatgroup (groupname,password) "
       //     + "values ($1,$2) RETURNING id, groupname,password, notes, shoppinglist, calendar, money";
-      var query = client.query(q, [flatGroup, pass, key]);
+      var query = client.query(q, [flatGroup, pass, groupkey]);
       var results = [];
 
       //error handler for /add group
