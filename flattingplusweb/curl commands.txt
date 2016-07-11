@@ -5,4 +5,4 @@ curl -X POST -H "Content-Type: application/json" -d '{"name":"james","email":"ji
 
 curl --header "Authorization: key=AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0" --header Content-Type:"application/json" https://fcm.googleapis.com/fcm/send -d "{\"registration_ids\":[\"fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT\"]}"
 
-curl --header "Authorization: key=AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0" --header Content-Type:"application/json" https://fcm.googleapis.com/fcm/send -d "{\"registration_ids\":[\"APA91bESJWnTJZrJMymKAIdmLyb3IGptXWB_6Khm8G9H5cuMachDuPMlDSSuptWWcEsd-HSw9W_QIx_PZRRrYN5zywhAwbNsF9mA4KcetVNttlzZxc1Zp913-06VOhyDKyIVWeIFKVmW\"]}"
+curl --header "Authorization: key=AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0" --header Content-Type:"application/json" https://fcm.googleapis.com/fcm/send -d "{\"notification_key\":[\"APA91bEH86BZ5CAEDYFYz2Jk1S_Uc7pfUuW8Fwuj-tR9fflIVJReAsAnYCvhg-CTDOA3jt8BiXM_wgl31Lf9uWvrN_Ak5Pg-HhWMET9LD1jAV0vSFUkye9k\"]}"

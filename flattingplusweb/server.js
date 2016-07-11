@@ -230,6 +230,7 @@ app.get('/get/flatgroup/add', function (req, res) {
   var groupName = req.query.gname;
   var groupPass = req.query.pass;
   var email = req.query.email;
+  var fireToken = req.query.token;
   console.log("get group, name: " + groupName + " password: " + groupPass + " email: " + email);
   var q = "SELECT * FROM flatgroup WHERE groupname=$1 and password=$2";
   var query = client.query(q, [groupName, groupPass]);
@@ -251,6 +252,34 @@ app.get('/get/flatgroup/add', function (req, res) {
     if(results > 0)
     {
       addToUsersInGroup(groupName, email);
+
+      //Add user to device group
+      request({
+        url: 'https://android.googleapis.com/gcm/notification', //URL to hit
+        //qs: {from: 'blog example', time: +new Date()}, //Query string data
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'key='+serverKey,
+            'project_id': senderID
+        },
+        //Lets post the following key/values as form
+        json: {
+            "operation": "add",
+            "notification_key_name": groupName,
+            "notification_key": results['notificationid'],
+            "registration_ids": [fireToken]
+        }
+      }, function(error, response, body){
+      console.log('error: ' + error);
+      console.log('body= ' + body);
+      console.log('status = ' + response.statusCode);
+        if(error) {
+            console.log(error);
+        } else {
+            console.log(response.statusCode, body);
+          }
+});
     }
     res.json(results);
     console.log("result: " + results[0]);
