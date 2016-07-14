@@ -254,7 +254,7 @@ app.get('/get/flatgroup/add', function (req, res) {
     if(results > 0)
     {
       addToUsersInGroup(groupName, email);
-
+      console.console.log("About to send add device request to FCM");
       //Add user to device group
       request({
         url: 'https://android.googleapis.com/gcm/notification', //URL to hit
@@ -273,7 +273,7 @@ app.get('/get/flatgroup/add', function (req, res) {
             "registration_ids": [fireToken]
         }
       }, function(error, response, body){
-      console.console.log(results['notificationid']);
+      console.log('add device:' + results['notificationid']);
       console.log('error: ' + error);
       console.log('body= ' + body);
       console.log('status = ' + response.statusCode);
