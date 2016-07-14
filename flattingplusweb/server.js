@@ -251,7 +251,7 @@ app.get('/get/flatgroup/add', function (req, res) {
 
   //After all data is returned, close connection and return results
   query.on('end', function () {
-    if(results > 0)
+    if(results.length > 0)
     {
 
       console.log("About to send add device request to FCM");
