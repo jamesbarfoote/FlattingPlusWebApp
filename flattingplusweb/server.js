@@ -254,7 +254,7 @@ app.get('/get/flatgroup/add', function (req, res) {
     if(results > 0)
     {
       addToUsersInGroup(groupName, email);
-      console.console.log("About to send add device request to FCM");
+      console.log("About to send add device request to FCM");
       //Add user to device group
       request({
         url: 'https://android.googleapis.com/gcm/notification', //URL to hit
@@ -280,6 +280,7 @@ app.get('/get/flatgroup/add', function (req, res) {
         if(error) {
             console.log(error);
         } else {
+          results.push(body);
             console.log('successfully added another device to ' + groupName + response.statusCode, body);
           }
 });
