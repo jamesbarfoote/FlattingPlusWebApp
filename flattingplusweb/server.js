@@ -253,7 +253,7 @@ app.get('/get/flatgroup/add', function (req, res) {
   query.on('end', function () {
     if(results > 0)
     {
-      addToUsersInGroup(groupName, email);
+
       console.log("About to send add device request to FCM");
       //Add user to device group
       request({
@@ -285,6 +285,7 @@ app.get('/get/flatgroup/add', function (req, res) {
           }
 });
     }
+    addToUsersInGroup(groupName, email);
     res.json(results);
     console.log("result: " + results[0]);
   });
