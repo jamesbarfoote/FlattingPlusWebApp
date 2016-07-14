@@ -269,11 +269,13 @@ app.get('/get/flatgroup/add', function (req, res) {
         json: {
             "operation": "add",
             "notification_key_name": groupName,
-            "notification_key": results['notificationid'],
+            "notification_key": results[0].notificationid,
+
+            // "notification_key": results['notificationid'],
             "registration_ids": [fireToken]
         }
       }, function(error, response, body){
-      console.log('add device:' + results['notificationid']);
+      console.log('add device:' + results[0].notificationid);
       console.log('error: ' + error);
       console.log('body= ' + body);
       console.log('status = ' + response.statusCode);
