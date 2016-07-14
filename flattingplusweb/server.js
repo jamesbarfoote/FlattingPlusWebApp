@@ -478,10 +478,10 @@ app.put('/add/note', function (req, res) {
 //get group
 app.get('/get/notes', function (req, res) {
   var groupName = req.query.gname;
-  var groupPass = req.query.pass;
+  var date = req.query.date;
   console.log("get group, name: " + groupName);
-  var q = "SELECT * FROM notes WHERE groupname=$1";
-  var query = client.query(q, [groupName, groupPass]);
+  var q = "SELECT *  FROM notes WHERE groupname=$1 AND currtime > $2";
+  var query = client.query(q, [groupName, date]);
 
   var results = [];
 
