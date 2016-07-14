@@ -56,32 +56,32 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-function getFireIDs(groupName)
-{
-  //select firebaseid from users join UsersInGroup on useremail Where groupname=groupName
-  console.log("get firebase ids: " + groupName);
-  var q = "select firebaseid from users natural join usersingroup email Where groupname=$1";
-  var query = client.query(q, [groupName]);
-
-  var results = [];
-
-  //error handler for /get_users
-  query.on('error', function () {
-    console.log('Error, fail to get users from group: ' + groupName);
-  });
-
-  //stream results back one row at a time
-  query.on('row', function (row) {
-    console.log('Row ' + row);
-    results.push(row);
-  });
-
-  //After all data is returned, close connection and return results
-  query.on('end', function () {
-    toDevices = results.toString();
-    return results.toString();
-  });
-}
+// function getFireIDs(groupName)
+// {
+//   //select firebaseid from users join UsersInGroup on useremail Where groupname=groupName
+//   console.log("get firebase ids: " + groupName);
+//   var q = "select firebaseid from users natural join usersingroup email Where groupname=$1";
+//   var query = client.query(q, [groupName]);
+//
+//   var results = [];
+//
+//   //error handler for /get_users
+//   query.on('error', function () {
+//     console.log('Error, fail to get users from group: ' + groupName);
+//   });
+//
+//   //stream results back one row at a time
+//   query.on('row', function (row) {
+//     console.log('Row ' + row);
+//     results.push(row);
+//   });
+//
+//   //After all data is returned, close connection and return results
+//   query.on('end', function () {
+//     toDevices = results.toString();
+//     return results.toString();
+//   });
+// }
 
 app.put('/add/user', function (req, res) {
   var name = req.body.name;
@@ -198,7 +198,7 @@ app.get('/get/users', function (req, res) {
 });
 
 
-//get group
+//get group - where the user isnt already part of this group
 app.get('/get/flatgroup', function (req, res) {
   var groupName = req.query.gname;
   var groupPass = req.query.pass;
@@ -224,6 +224,8 @@ app.get('/get/flatgroup', function (req, res) {
     console.log("result: " + results[0]);
   });
 });
+
+
 
 //Get group and add to usersingroup if creditentials match
 app.get('/get/flatgroup/add', function (req, res) {
@@ -436,8 +438,8 @@ app.put('/add/note', function (req, res) {
 
   //after all the data is returned close connection and return result
   query.on('end', function () {
-    getFireIDs(flatGroup);
-    console.log("Sending message: " + toDevices.toString());
+    // getFireIDs(flatGroup);
+    // console.log("Sending message: " + toDevices.toString());
     // sendMessageToUser('fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', { message: 'Hello'});
     var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
         to: toDevices.toString(),
