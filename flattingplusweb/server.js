@@ -273,13 +273,14 @@ app.get('/get/flatgroup/add', function (req, res) {
             "registration_ids": [fireToken]
         }
       }, function(error, response, body){
+      console.console.log(results['notificationid']);
       console.log('error: ' + error);
       console.log('body= ' + body);
       console.log('status = ' + response.statusCode);
         if(error) {
             console.log(error);
         } else {
-            console.log(response.statusCode, body);
+            console.log('successfully added another device to ' + groupName + response.statusCode, body);
           }
 });
     }
@@ -449,14 +450,14 @@ app.put('/add/note', function (req, res) {
         },
         notification: {
             title: 'New note added',
-            body: 'message',
+            body: content,
             icon: 'ic_launcher' //now required
         }
     };
 
     fcm.send(message, function(err, response){
         if (err) {
-            console.log("Something has gone wrong!");
+            console.log("Something has gone wrong! " + err);
         } else {
             console.log("Successfully sent with response: ", response);
         }
