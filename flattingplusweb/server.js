@@ -361,36 +361,6 @@ console.log('status = ' + response.statusCode);
 
 });
 
-// function addNotificationKeyToGroup(flatGroup, jsonBody)
-// {
-//   var key = jsonBody.body.notification_key;
-//   var flat = flatGroup;
-//   console.log("add key to group. Flat: " + flat + " key: " + key);
-//
-//   var q = "UPDATE flatgroup SET nofificationid=($1) where groupname=($2)";
-//   var query = client.query(q, [key, flat]);
-//   var results = [];
-//
-//   //error handler for /update_cart
-//   query.on('error', function () {
-//     res.status(500).send('Error, failed to update group :' + userName + ' email: ' + userEmail);
-//   });
-//
-//   //stream results back one row at a time
-//   query.on('row', function (row) {
-//     results.push(row);
-//   });
-//
-//   //after all the data is returned close connection and return result
-//   query.on('end', function () {
-//     var obj = {};
-//
-//     // var obj = { groupname: results[0].groupname, email: results[0].email, name: results[0].name };
-//     res.json(obj);
-//     console.log("result: " + obj);
-//   });
-// }
-
 
 function addToUsersInGroup(groupName, email)
 {
@@ -419,6 +389,7 @@ function addToUsersInGroup(groupName, email)
   });
 }
 
+//====================START NOTES==============================
 app.put('/add/note', function (req, res) {
   var flatGroup = req.body.group;
   var title = req.body.notetitle;
@@ -443,9 +414,6 @@ app.put('/add/note', function (req, res) {
 
   //after all the data is returned close connection and return result
   query.on('end', function () {
-    // getFireIDs(flatGroup);
-    // console.log("Sending message: " + toDevices.toString());
-    // sendMessageToUser('fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT', { message: 'Hello'});
     var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
         to: 'APA91bGEfolfEgd8ko3J63W3tb0dePR0cKNj-mGpOJeYu7ofcUFuH-1XLU2RBEUCDHGzdisJf1s7m3AeacmhUarsy4dWg47Of831neF-D09BepqpK-gU3BM',
         collapse_key: '0',
@@ -475,7 +443,7 @@ app.put('/add/note', function (req, res) {
 });
 
 
-//get group
+//get notes
 app.get('/get/notes', function (req, res) {
   var groupName = req.query.gname;
   var date = req.query.date;
@@ -501,45 +469,174 @@ app.get('/get/notes', function (req, res) {
   });
 });
 
+//====================END NOTES==============================
 
-// function sendMessageToUser(deviceId, message)
-// {
-//   request({
-//     url: 'https://fcm.googleapis.com/fcm/send',
-//     method: 'POST',
-//     headers: {
-//       'Content-Type' :' application/json',
-//       'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
-//       // 'Authorization': 'AIzaSyBi-6JXpT40KLFn4e6k0wLa9kdDFAbvnU0'
-//     },
-//     body: JSON.stringify(
-//   //     {
-//   //   'to' : deviceId,
-//   //   'registration_ids': deviceId,
-//   //   "notification" : {
-//   //     "body" : "great match!",
-//   //     "title" : "Portugal vs. Denmark",
-//   //     "icon" : "myicon"
-//   //   }
-//   // }
-//   { "notification": {
-//       "title": "Portugal vs. Denmark",
-//       "text": "5 to 1"
-//     },
-//     "to" : "fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT",
-//     "registration_ids" : "fMy0xAn8tuI:APA91bG31R55g-ATgUf6S7tZX-5pduA3F8qHmd406b94GrOR38G7UBDprKWG36LdIyv0ITXLBFJ0bdwVBWCmRLiMb6rFZ0XgvslU6v46smTiklcQUErw-7yMgyx6lTqILUv9I1pzdQjT"
-//   }
-// )
-//   }, function(error, response, body) {
-//     if (error) {
-//       console.error(error, response, body);
-//     }else if (response.statusCode >= 400) {
-//       console.error('HTTP Error: '+response.statusCode+' - '+response.statusMessage+'\n'+body);
-//     }else {console.log('Done!')}
-//   });
-// }
 
-// sendMessageToUser("d7x...KJQ",{ message: 'Hello puf'});
+//====================START MONEY==============================
+app.put('/add/money', function (req, res) {
+  var flatGroup = req.body.group;
+  var title = req.body.notetitle;
+  var content = req.body.notecontent;
+  var owner = req.body.notecreator;
+  var time = req.body.notetimestamp;
+  console.log(title + ' groupname: ' + flatGroup + ' content: ' + content + ' owner: ' + owner + ' time: ' + time);
+
+  var q = "insert into money (groupname,content, creator, currtime, title) values ($1,$2, $3, $4, $5) RETURNING groupname, title, currtime, creator";
+  var query = client.query(q, [flatGroup, content, owner, time, title]);
+  var results = [];
+
+  //error handler for /add user
+  query.on('error', function () {
+    res.status(500).send('Error, fail to add money note ' + title);
+  });
+
+  //stream results back one row at a time
+  query.on('row', function (row) {
+    results.push(row);
+  });
+
+  //after all the data is returned close connection and return result
+  query.on('end', function () {
+    var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+        to: 'APA91bGEfolfEgd8ko3J63W3tb0dePR0cKNj-mGpOJeYu7ofcUFuH-1XLU2RBEUCDHGzdisJf1s7m3AeacmhUarsy4dWg47Of831neF-D09BepqpK-gU3BM',
+        collapse_key: '0',
+        data: {
+            your_custom_data_key: 'your_custom_data_value'
+        },
+        notification: {
+            title: 'New money item added',
+            body: content,
+            icon: 'ic_launcher' //now required
+        }
+    };
+
+    fcm.send(message, function(err, response){
+        if (err) {
+            console.log("Something has gone wrong! " + err);
+        } else {
+            console.log("Successfully sent with response: ", response);
+        }
+    });
+
+
+    var obj = { groupname: results[0].groupname, title: results[0].title, creator: results[0].creator };
+    res.json(obj);
+    console.log("result: " + obj);
+  });
+});
+
+
+//get notes
+app.get('/get/money', function (req, res) {
+  var groupName = req.query.gname;
+  var date = req.query.date;
+  console.log("get group, name: " + groupName);
+  var q = "SELECT *  FROM money WHERE groupname=$1 AND currtime > $2";
+  var query = client.query(q, [groupName, date]);
+
+  var results = [];
+
+  //error handler for /get_users
+  query.on('error', function () {
+    res.status(500).send('Error, fail to get users: ' + userEmail);
+  });
+
+  //stream results back one row at a time
+  query.on('row', function (row) {
+    results.push(row);
+  });
+  //After all data is returned, close connection and return results
+  query.on('end', function () {
+    res.json(results);
+    console.log("result: " + results[0]);
+  });
+});
+
+//====================END MONEY==============================
+
+
+//====================START SHOPPING==============================
+app.put('/add/shopping', function (req, res) {
+  var flatGroup = req.body.group;
+  var title = req.body.notetitle;
+  var content = req.body.notecontent;
+  var owner = req.body.notecreator;
+  var time = req.body.notetimestamp;
+  console.log(title + ' groupname: ' + flatGroup + ' content: ' + content + ' owner: ' + owner + ' time: ' + time);
+
+  var q = "insert into shopping (groupname,content, creator, currtime, title) values ($1,$2, $3, $4, $5) RETURNING groupname, title, currtime, creator";
+  var query = client.query(q, [flatGroup, content, owner, time, title]);
+  var results = [];
+
+  //error handler for /add user
+  query.on('error', function () {
+    res.status(500).send('Error, fail to add note ' + title);
+  });
+
+  //stream results back one row at a time
+  query.on('row', function (row) {
+    results.push(row);
+  });
+
+  //after all the data is returned close connection and return result
+  query.on('end', function () {
+    var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+        to: 'APA91bGEfolfEgd8ko3J63W3tb0dePR0cKNj-mGpOJeYu7ofcUFuH-1XLU2RBEUCDHGzdisJf1s7m3AeacmhUarsy4dWg47Of831neF-D09BepqpK-gU3BM',
+        collapse_key: '0',
+        data: {
+            your_custom_data_key: 'your_custom_data_value'
+        },
+        notification: {
+            title: 'New shopping item added',
+            body: content,
+            icon: 'ic_launcher' //now required
+        }
+    };
+
+    fcm.send(message, function(err, response){
+        if (err) {
+            console.log("Something has gone wrong! " + err);
+        } else {
+            console.log("Successfully sent with response: ", response);
+        }
+    });
+
+
+    var obj = { groupname: results[0].groupname, title: results[0].title, creator: results[0].creator };
+    res.json(obj);
+    console.log("result: " + obj);
+  });
+});
+
+
+//get shopping
+app.get('/get/shopping', function (req, res) {
+  var groupName = req.query.gname;
+  var date = req.query.date;
+  console.log("get group, name: " + groupName);
+  var q = "SELECT *  FROM shopping WHERE groupname=$1 AND currtime > $2";
+  var query = client.query(q, [groupName, date]);
+
+  var results = [];
+
+  //error handler for /get_users
+  query.on('error', function () {
+    res.status(500).send('Error, fail to get users: ' + userEmail);
+  });
+
+  //stream results back one row at a time
+  query.on('row', function (row) {
+    results.push(row);
+  });
+  //After all data is returned, close connection and return results
+  query.on('end', function () {
+    res.json(results);
+    console.log("result: " + results[0]);
+  });
+});
+
+//====================END SHOPPING==============================
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

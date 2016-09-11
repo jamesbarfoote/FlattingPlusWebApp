@@ -3,6 +3,9 @@ group name, title, content, created by (email), time stamp (last edited)
 
 create table notes(id serial primary key, groupname varchar, title varchar, content varchar, creator varchar, currtime varchar);
 
+create table money(id serial primary key, groupname varchar, title varchar, content varchar, creator varchar, currtime varchar);
+
+create table shopping(id serial primary key, groupname varchar, title varchar, content varchar, creator varchar, currtime varchar);
 
 create table usersInGroup(userEmail varchar REFERENCES users(email), groupName varchar REFERENCES flatgroup(groupname));
 
