@@ -526,19 +526,19 @@ app.put('/add/money', function (req, res) {
 });
 
 
-//get notes
+//get money
 app.get('/get/money', function (req, res) {
   var groupName = req.query.gname;
   var date = req.query.date;
-  console.log("get group, name: " + groupName);
+  console.log("(money) get group, name: " + groupName);
   var q = "SELECT *  FROM money WHERE groupname=$1 AND currtime > $2";
   var query = client.query(q, [groupName, date]);
 
   var results = [];
 
-  //error handler for /get_users
+  //error handler for /get notes
   query.on('error', function () {
-    res.status(500).send('Error, fail to get users: ' + userEmail);
+    res.status(500).send('Error, fail to get money: ' + userEmail);
   });
 
   //stream results back one row at a time
